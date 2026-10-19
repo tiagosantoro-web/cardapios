@@ -431,4 +431,47 @@ body.modo-impressao { background: #ecebe8; }
   .cartoes { padding: 0; gap: 6mm; grid-template-columns: repeat(2, 90mm); }
 }
 
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+/* ================= EFEITOS LEVES ================= */
+
+/* Conteúdo entra suave (ao abrir e ao trocar de aba) */
+.app main { animation: aparecer .45s ease both; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* Cards e pratos "sobem" ao entrar na tela (nada fica escondido se o efeito não rodar) */
+.rv-on { animation: entrarCard .55s cubic-bezier(.2,.7,.3,1) backwards; }
+@keyframes entrarCard { from { opacity: 0; transform: translateY(16px); } }
+
+/* Fotos: brilho enquanto carregam e fade quando chegam */
+/* (só na página do cardápio; nos painéis, que são redesenhados a cada mudança, a foto aparece direto) */
+main .foto:not(:has(.emoji)) { background: linear-gradient(100deg, color-mix(in srgb, var(--primaria) 8%, var(--superficie)) 35%, color-mix(in srgb, var(--primaria) 3%, var(--superficie)) 50%, color-mix(in srgb, var(--primaria) 8%, var(--superficie)) 65%) 0 0 / 220% 100%; animation: brilho 1.3s linear infinite; }
+main .foto:has(img.ok) { animation: none; }
+@keyframes brilho { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+main .foto img, main img.miniatura, img.capa-img { opacity: 0; transition: opacity .5s ease; }
+main .foto img.ok, main img.miniatura.ok, img.capa-img.ok { opacity: 1; }
+.destaque .foto img { transition: opacity .5s ease, transform .6s ease; }
+.destaque:hover .foto img.ok { transform: scale(1.04); }
+
+/* Capa com zoom lento e logo que "salta" */
+.capa-img.ok { animation: capaZoom 14s ease-out both; }
+@keyframes capaZoom { from { transform: scale(1.1); } to { transform: scale(1); } }
+.logo { animation: logoEntra .6s .15s cubic-bezier(.3,1.5,.5,1) both; }
+@keyframes logoEntra { from { opacity: 0; transform: translateX(-50%) scale(.6); } to { opacity: 1; transform: translateX(-50%) scale(1); } }
+
+/* Bolinha que voa até a sacola e a barra que "pula" */
+.voo { position: fixed; z-index: 45; width: 18px; height: 18px; border-radius: 50%; background: var(--primaria); box-shadow: 0 4px 12px color-mix(in srgb, var(--primaria) 55%, transparent), inset 0 0 0 3px color-mix(in srgb, #fff 35%, transparent); pointer-events: none; }
+.sacola-barra.visivel.pulo { animation: pulo .45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes pulo { 0% { transform: translate(-50%, 0) scale(1); } 40% { transform: translate(-50%, -5px) scale(1.035); } 100% { transform: translate(-50%, 0) scale(1); } }
+.contador.pop { animation: pop .35s cubic-bezier(.3,1.8,.5,1); display: inline-block; }
+@keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+/* Salão: confirmação e tela do garçom */
+.icone-ok { animation: okEntra .5s cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes okEntra { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.tela-garcom:not([hidden]) { animation: aparecer .3s ease both; }
+.tela-garcom:not([hidden]) .tg-mesa { animation: okEntra .5s .1s cubic-bezier(.3,1.4,.5,1) both; }
+.mesa-acoes button, .abas button, .add-classico, .contato { transition: transform .15s, background .2s, color .2s, box-shadow .2s; }
+.mesa-acoes button:active, .contato:active { transform: scale(.94); }
+.folha-topo .ornamento { display: inline-block; animation: brilhoOrnamento 3.5s ease-in-out infinite; }
+@keyframes brilhoOrnamento { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } main .foto img, main img.miniatura, img.capa-img { opacity: 1 !important; } }

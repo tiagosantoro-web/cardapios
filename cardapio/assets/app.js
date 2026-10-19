@@ -56,6 +56,9 @@
   let rascunho = null; // item sendo montado no painel de produto
   let focoAnterior = null;
   let observador = null;
+  let revelador = null;
+  let ultimaQtd = 0;
+  const semMovimento = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // ---------- salão (pedido na mesa) ----------
   const S = D.salao && D.salao.ativo !== false ? D.salao : null;
@@ -370,7 +373,7 @@
         <div class="logo">${D.logo ? `<img src="${esc(D.logo)}" alt="${esc(D.nome)}">` : esc(iniciais(D.nome))}</div>
         <h1>${esc(D.nome)}</h1>
         ${D.slogan ? `<p class="slogan">${esc(D.slogan)}</p>` : ""}
-        ${horarios.length && !salao ? `<span class="status${s.aberto ? "aberto" : "fechado"}">${s.texto}${s.detalhe ? ` <span>· ${s.detalhe}</span>` : ""}</span>` : ""}
+        ${horarios.length && !salao ? `<span class="status ${s.aberto ? "aberto" : "fechado"}">${s.texto}${s.detalhe ? ` <span>· ${s.detalhe}</span>` : ""}</span>` : ""}
         ${salao ? `
           ${mesaCard()}
           ${S.wifi && S.wifi.rede ? `<button type="button" class="wifi" data-acao="wifi">${ICONES.wifi}<span>Wi-Fi <b>${esc(S.wifi.rede)}</b>${S.wifi.senha ? ` · senha <b>${esc(S.wifi.senha)}</b>` : ""}</span>${S.wifi.senha ? "<em>copiar</em>" : ""}</button>` : ""}
@@ -430,6 +433,47 @@
     montar();
     atualizar();
     observarSecoes();
+    revelar();
+    // fotos que já estavam no cache do navegador não disparam "load" de novo
+    $$("img", raiz).forEach((img) => { if (img.complete && img.naturalWidth) img.classList.add("ok"); });
+  }
+
+  // ---------- efeitos ----------
+  // cards e pratos "sobem" suavemente quando estão para entrar na tela.
+  // À prova de falhas: nada fica escondido; se o navegador não avisar a rolagem, só não há animação.
+  function revelar() {
+    if (revelador) revelador.disconnect();
+    if (!("IntersectionObserver" in window) || semMovimento()) return;
+    revelador = new IntersectionObserver((entradas) => entradas.forEach((en) => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add("rv-on");
+      revelador.unobserve(en.target);
+    }), { rootMargin: "0px 0px 60px 0px" });
+    $$(".item, .destaque, .prato, .secao > h2, .secao-classica > h2, .sugestoes-chef, .rodape-pagina", raiz).forEach((el) => {
+      if (el.getBoundingClientRect().top < innerHeight) return; // o que já está na tela entra junto com a página
+      revelador.observe(el);
+    });
+  }
+  // bolinha que voa do botão "+" até a sacola
+  function voar(a) {
+    if (!a || !a.width || semMovimento() || !document.body.animate) return pular();
+    const barra = $(".sacola-barra", raiz).getBoundingClientRect();
+    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2;
+    const dx = barra.left + 34 - x0, dy = Math.min(barra.top, innerHeight - 70) + 26 - y0;
+    const bola = document.createElement("div");
+    bola.className = "voo";
+    bola.style.left = x0 - 9 + "px"; bola.style.top = y0 - 9 + "px";
+    document.body.appendChild(bola);
+    bola.animate([
+      { transform: "translate(0, 0) scale(1)", opacity: 1 },
+      { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 70}px) scale(1.15)`, opacity: 1, offset: 0.45 },
+      { transform: `translate(${dx}px, ${dy}px) scale(.35)`, opacity: 0.4 }
+    ], { duration: 620, easing: "cubic-bezier(.4, 0, .6, 1)" }).onfinish = () => { bola.remove(); pular(); };
+  }
+  function pular() {
+    const barra = $(".sacola-barra", raiz);
+    if (!barra || semMovimento()) return;
+    barra.classList.remove("pulo"); void barra.offsetWidth; barra.classList.add("pulo");
   }
 
   // ---------- atualização da sacola ----------
@@ -442,7 +486,10 @@
     const barra = $(".sacola-barra", raiz);
     barra.classList.toggle("visivel", n > 0);
     const wa = $(".wa-flutuante", raiz); if (wa) wa.classList.toggle("oculto", n > 0);
-    $(".contador", barra).textContent = n;
+    const contador = $(".contador", barra);
+    contador.textContent = n;
+    if (n !== ultimaQtd && n) { contador.classList.remove("pop"); void contador.offsetWidth; contador.classList.add("pop"); }
+    ultimaQtd = n;
     $(".soma", barra).textContent = real(subtotal());
     salvar();
     const p = $(".painel", raiz);
@@ -565,7 +612,7 @@
     const voltar = rascunho.voltarSacola;
     adicionar({ id: i.id, qtd: rascunho.qtd, esc: esc_, obs });
     rascunho = null;
-    voltar ? abrirSacola() : fecharPainel();
+    voltar ? abrirSacola() : (fecharPainel(), pular());
     toast(`${i.nome} ${contexto === "salao" ? "no pedido" : "na sacola"}`);
   }
 
@@ -975,7 +1022,14 @@
       const el = ev.target.closest("[data-mais],[data-menos],[data-lmais],[data-lmenos],[data-rqtd],[data-acao],[data-ir],[data-modo],[data-pag],[data-pagconta],[data-pessoas],[data-contexto],[data-abrir],.fundo-escuro");
       if (!el) return;
       if (el.classList.contains("fundo-escuro")) return fecharPainel();
-      if (el.dataset.mais) { ev.stopPropagation(); return alterarSimples(el.dataset.mais, 1); }
+      if (el.dataset.mais) {
+        ev.stopPropagation();
+        const painelAberto = $(".painel", raiz).classList.contains("aberto");
+        const origem = el.getBoundingClientRect(); // medido antes: o botão é redesenhado ao adicionar
+        alterarSimples(el.dataset.mais, 1);
+        if (!painelAberto) voar(origem);
+        return;
+      }
       if (el.dataset.menos) { ev.stopPropagation(); return alterarSimples(el.dataset.menos, -1); }
       if (el.dataset.lmais) return alterarLinha(+el.dataset.lmais, 1);
       if (el.dataset.lmenos) return alterarLinha(+el.dataset.lmenos, -1);
@@ -1003,7 +1057,8 @@
         case "confirmar-item": return confirmarItem();
         case "limpar": sacola = []; cliente.obs = ""; cliente.troco = ""; atualizar(); return fecharPainel();
         case "demo-contato": return toast(`No cardápio real, "${el.dataset.rotulo}" abre o contato da loja`);
-        case "mesa": acaoPendente = null; return abrirMesa();
+        // trocar a mesa de dentro do pedido volta para o pedido
+        case "mesa": acaoPendente = $(".painel", raiz).dataset.tipo === "sacola" ? abrirComanda : null; return abrirMesa();
         case "confirmar-mesa": return confirmarMesa();
         case "enviar-mesa": return enviarMesa();
         case "mostrar-garcom": return mostrarGarcom();
@@ -1039,6 +1094,8 @@
         atualizarRascunho();
       }
     });
+    // foto carregada aparece com um fade suave
+    raiz.addEventListener("load", (ev) => { if (ev.target.tagName === "IMG") ev.target.classList.add("ok"); }, true);
     // foto que não carregar vira o emoji do produto
     raiz.addEventListener("error", (ev) => {
       const img = ev.target;
