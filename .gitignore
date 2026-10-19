@@ -9,3 +9,9 @@ desktop.ini
 
 # Node (se um dia usar)
 node_modules/
+
+# Planilhas e listas de contatos (dados pessoais, nunca enviar ao GitHub público)
+*.xlsx
+*.xls
+*.csv
+leads-*
