@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cardápio Digital com Pedido no WhatsApp</title>
+<meta name="description" content="Cardápio digital com fotos, link próprio, QR Code e pedido direto no WhatsApp, sem comissão por pedido. Para hamburguerias, pizzarias, adegas, docerias e restaurantes.">
+<meta property="og:title" content="Cardápio digital com pedido direto no WhatsApp">
+<meta property="og:description" content="Link próprio, QR Code e pedido organizado no seu WhatsApp. Sem aplicativo e sem comissão por pedido.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;600;700;800&display=swap">
+<script>
+  // ================== SEUS DADOS (edite só aqui) ==================
+  const VENDEDOR = {
+    marca: "Cardápio Digital",          // seu nome ou o nome do seu serviço
+    whatsapp: "5511999999999",          // 55 + DDD + número, só dígitos
+    instagram: "",                      // ex.: "@seuperfil" (vazio = esconde)
+    cidade: ""                          // ex.: "Itapevi e região" (vazio = esconde)
+  };
+  // ================================================================
+</script>
+<style>
+  :root { --tinta: #17151a; --papel: #fbf8f4; --suave: #6d6670; --destaque: #e4572e; --destaque-escuro: #c2401b; --linha: #e8e2dc; --cartao: #ffffff; --verde: #1fa855;
+          --titulo: "Bricolage Grotesque", system-ui, sans-serif; --texto: "Manrope", system-ui, sans-serif; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--papel); color: var(--tinta); font-family: var(--texto); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  .faixa { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .dentro { max-width: 1080px; margin: 0 auto; }
+  section { padding-block: 56px; }
+  h1, h2, h3 { font-family: var(--titulo); letter-spacing: -.02em; text-wrap: balance; }
+  h2 { font-size: clamp(28px, 4.4vw, 40px); line-height: 1.08; margin-bottom: 12px; }
+  .sub { color: var(--suave); font-size: 17px; max-width: 60ch; margin-bottom: 28px; }
+  .rotulo { display: inline-block; font-size: 12.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--destaque); margin-bottom: 10px; }
+  :focus-visible { outline: 3px solid var(--destaque); outline-offset: 3px; border-radius: 6px; }
+
+  /* Topo */
+  .topo { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--papel) 90%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--linha); }
+  .topo .dentro { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 12px; }
+  .marca { font-family: var(--titulo); font-weight: 800; font-size: 19px; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .marca span { width: 30px; height: 30px; border-radius: 9px; background: var(--destaque); color: #fff; display: grid; place-items: center; font-size: 16px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; padding: 14px 22px; border-radius: 14px; text-decoration: none; transition: transform .15s, background .2s; font-size: 16px; }
+  .btn:active { transform: scale(.97); }
+  .btn svg { width: 20px; height: 20px; }
+  .btn-whats { background: var(--verde); color: #fff; box-shadow: 0 10px 24px rgba(31,168,85,.28); }
+  .btn-whats:hover { background: #18914a; }
+  .btn-claro { background: var(--cartao); border: 1.5px solid var(--linha); }
+  .btn-claro:hover { border-color: var(--tinta); }
+  .topo .btn { padding: 9px 14px; font-size: 14px; border-radius: 11px; box-shadow: none; }
+
+  /* Hero */
+  .hero { padding-block: 48px 40px; }
+  .hero .dentro { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 900px) { .hero .dentro { grid-template-columns: 1.15fr .85fr; } }
+  .hero h1 { font-size: clamp(36px, 6.4vw, 64px); line-height: 1.02; }
+  .hero h1 em { font-style: normal; color: var(--destaque); }
+  .hero .lead { font-size: 18.5px; color: var(--suave); max-width: 50ch; margin-top: 18px; }
+  .acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .provas { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 24px; list-style: none; font-size: 14.5px; font-weight: 700; }
+  .provas li { display: flex; align-items: center; gap: 6px; }
+  .provas li::before { content: "✓"; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #dcf5ea; color: #0f7a55; font-size: 12px; }
+  .celular { justify-self: center; width: 300px; height: 610px; border-radius: 44px; padding: 12px; background: #17151a; box-shadow: 0 30px 60px rgba(23,21,26,.25), inset 0 0 0 2px #39353f; position: relative; }
+  .celular::before { content: ""; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 84px; height: 22px; border-radius: 99px; background: #17151a; z-index: 2; }
+  .celular iframe { width: 100%; height: 100%; border: 0; border-radius: 33px; background: #fff; }
+  .celular-dica { text-align: center; font-size: 13px; color: var(--suave); margin-top: 12px; }
+  @media (max-width: 899px) { .celular-col { display: none; } }
+
+  /* Problemas */
+  .dores { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .dor { background: var(--cartao); border: 1px solid var(--linha); border-radius: 20px; padding: 22px; }
+  .dor b { display: block; font-size: 17px; margin: 8px 0 4px; }
+  .dor p { color: var(--suave); font-size: 15px; }
+  .dor .ic { font-size: 26px; }
+  .virada { margin-top: 18px; background: var(--tinta); color: #fff; border-radius: 20px; padding: 22px 24px; font-size: 17px; font-weight: 600; }
+  .virada b { color: #ffd166; }
+
+  /* Exemplos */
+  .demos { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+  .demo { background: var(--cartao); border: 1px solid var(--linha); border-radius: 20px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+  .demo:hover { transform: translateY(-4px); box-shadow: 0 18px 36px rgba(23,21,26,.12); }
+  .demo .capa { height: 140px; position: relative; }
+  .demo .capa img { width: 100%; height: 100%; object-fit: cover; }
+  .demo .capa .logo { position: absolute; left: 16px; bottom: -22px; width: 52px; height: 52px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; }
+  .demo .corpo { padding: 30px 18px 18px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .demo b { font-size: 17px; }
+  .demo small { color: var(--suave); font-size: 14px; }
+  .demo i { font-style: normal; font-weight: 800; color: var(--destaque); font-size: 14.5px; margin-top: auto; padding-top: 10px; }
+  .nota-demo { color: var(--suave); font-size: 13px; margin-top: 14px; }
+
+  /* Recursos */
+  .recursos { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0 32px; list-style: none; }
+  .recursos li { padding: 16px 0; border-top: 1px solid var(--linha); display: grid; grid-template-columns: 34px 1fr; gap: 2px 12px; }
+  .recursos .ic { grid-row: span 2; font-size: 22px; line-height: 1.2; }
+  .recursos b { font-size: 16px; }
+  .recursos span:not(.ic) { color: var(--suave); font-size: 14.5px; }
+
+  /* Mensagem */
+  .mensagem .dentro { display: grid; gap: 32px; align-items: center; }
+  @media (min-width: 900px) { .mensagem .dentro { grid-template-columns: 1fr 1fr; } }
+  .chat { background: #e5ddd5; background-image: radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px); background-size: 14px 14px; border-radius: 24px; padding: 22px; max-width: 440px; justify-self: center; width: 100%; }
+  .balao { background: #d9fdd3; color: #111b21; border-radius: 14px 3px 14px 14px; padding: 12px 14px; font-size: 14.5px; line-height: 1.55; box-shadow: 0 1px 1px rgba(0,0,0,.12); margin-left: auto; max-width: 94%; }
+  .balao .hora { display: block; text-align: right; font-size: 11px; color: #667781; margin-top: 4px; }
+  .check { list-style: none; display: grid; gap: 10px; margin-top: 18px; }
+  .check li { padding-left: 30px; position: relative; font-size: 16px; }
+  .check li::before { content: "✓"; position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 50%; background: var(--destaque); color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 800; }
+
+  /* Comparativo */
+  .tabela-wrap { overflow-x: auto; border: 1px solid var(--linha); border-radius: 20px; background: var(--cartao); }
+  table { width: 100%; border-collapse: collapse; min-width: 620px; font-size: 15px; }
+  th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--linha); }
+  tr:last-child td { border-bottom: 0; }
+  thead th { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--suave); }
+  thead th.nosso { color: var(--destaque); }
+  td.nosso { background: color-mix(in srgb, var(--destaque) 6%, transparent); font-weight: 700; }
+  .sim { color: #0f7a55; font-weight: 800; }
+  .nao { color: #b42318; font-weight: 800; }
+  .obs-tabela { color: var(--suave); font-size: 14px; margin-top: 12px; max-width: 70ch; }
+
+  /* Passos */
+  .passos { counter-reset: p; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; list-style: none; }
+  .passos li { counter-increment: p; background: var(--cartao); border: 1px solid var(--linha); border-radius: 20px; padding: 22px; }
+  .passos li::before { content: counter(p); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--tinta); color: #fff; font-weight: 800; margin-bottom: 12px; }
+  .passos b { font-size: 17px; display: block; margin-bottom: 4px; }
+  .passos span { color: var(--suave); font-size: 15px; }
+
+  /* Perguntas */
+  .faq { max-width: 760px; }
+  details { border-bottom: 1px solid var(--linha); }
+  summary { cursor: pointer; list-style: none; padding: 18px 36px 18px 0; font-weight: 800; font-size: 17px; position: relative; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: 600; color: var(--destaque); transition: transform .2s; }
+  details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  details p { color: var(--suave); padding: 0 0 18px; font-size: 15.5px; max-width: 65ch; }
+
+  /* Chamada final */
+  .final { background: var(--tinta); color: #fff; border-radius: 28px; padding: clamp(28px, 6vw, 56px); text-align: center; }
+  .final h2 { color: #fff; }
+  .final p { color: #c9c3cf; font-size: 17px; max-width: 52ch; margin: 0 auto 26px; }
+  footer { padding-block: 28px 48px; color: var(--suave); font-size: 13.5px; }
+  footer .dentro { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+  .wa-fixo { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 20; width: 58px; height: 58px; border-radius: 50%; background: #25d366; color: #fff; display: grid; place-items: center; box-shadow: 0 10px 24px rgba(37,211,102,.45); }
+  .wa-fixo svg { width: 30px; height: 30px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<header class="topo faixa"><div class="dentro">
+  <a class="marca" href="#"><span>🍽</span><b data-marca>Cardápio Digital</b></a>
+  <a class="btn btn-whats" data-whats="Olá! Quero saber mais sobre o cardápio digital." href="#contato" target="_blank" rel="noopener">Falar no WhatsApp</a>
+</div></header>
+
+<main>
+<section class="hero faixa"><div class="dentro">
+  <div>
+    <span class="rotulo">Para restaurantes, lanchonetes e delivery</span>
+    <h1>Seu cardápio no celular do cliente, com <em>pedido pronto no seu WhatsApp</em></h1>
+    <p class="lead">Um link próprio e um QR Code para o seu negócio. O cliente vê as fotos, escolhe tamanho e adicionais, e o pedido chega organizado, com total, endereço e forma de pagamento.</p>
+    <div class="acoes">
+      <a class="btn btn-whats" data-whats="Olá! Quero um cardápio digital para o meu negócio." href="#contato" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>Quero o meu cardápio</a>
+      <a class="btn btn-claro" href="vitrine.html">Ver exemplo funcionando</a>
+    </div>
+    <ul class="provas">
+      <li>Sem aplicativo para baixar</li>
+      <li>Sem comissão por pedido</li>
+      <li>Sua marca, suas cores</li>
+    </ul>
+  </div>
+  <div class="celular-col">
+    <div class="celular"><iframe src="demo-hamburgueria/index.html" title="Exemplo de cardápio digital" loading="lazy"></iframe></div>
+    <p class="celular-dica">Pode mexer: é um cardápio de verdade.</p>
+  </div>
+</div></section>
+
+<section class="faixa"><div class="dentro">
+  <span class="rotulo">O problema</span>
+  <h2>Pedido pelo WhatsApp não precisa ser bagunça</h2>
+  <p class="sub">Quem vende pelo WhatsApp conhece a rotina:</p>
+  <div class="dores">
+    <div class="dor"><span class="ic">📄</span><b>Cardápio em PDF ou foto</b><p>Pesado, ruim de ler no celular e desatualizado toda vez que um preço muda.</p></div>
+    <div class="dor"><span class="ic">💬</span><b>Pedido em dez mensagens</b><p>"Tem de quê?", "quanto fica?", "qual o endereço?". Atendimento lento, erro de valor e cliente que desiste.</p></div>
+    <div class="dor"><span class="ic">💸</span><b>Comissão em cada venda</b><p>Nos aplicativos de delivery, parte de cada pedido fica com a plataforma, até de cliente que já é seu.</p></div>
+  </div>
+  <p class="virada">Com o cardápio digital, o cliente monta o pedido sozinho e você recebe <b>tudo numa mensagem só</b>, pronto para confirmar.</p>
+</div></section>
+
+<section class="faixa" id="exemplos"><div class="dentro">
+  <span class="rotulo">Exemplos</span>
+  <h2>Veja como fica no seu segmento</h2>
+  <p class="sub">Abra no celular, adicione produtos à sacola e veja a mensagem que chegaria no WhatsApp da loja.</p>
+  <div class="demos">
+    <a class="demo" href="demo-hamburgueria/index.html"><div class="capa"><img src="demo-hamburgueria/img/capa.webp" alt="" loading="lazy"><div class="logo"><img src="demo-hamburgueria/img/logo.svg" alt=""></div></div><div class="corpo"><b>Hamburgueria</b><small>Combos, burgers com adicionais e "vire combo"</small><i>Abrir exemplo →</i></div></a>
+    <a class="demo" href="demo-pizzaria/index.html"><div class="capa"><img src="demo-pizzaria/img/capa.webp" alt="" loading="lazy"><div class="logo"><img src="demo-pizzaria/img/logo.svg" alt=""></div></div><div class="corpo"><b>Pizzaria</b><small>Broto ou grande, borda recheada e taxa por bairro</small><i>Abrir exemplo →</i></div></a>
+    <a class="demo" href="demo-adega/index.html"><div class="capa"><img src="demo-adega/img/capa.webp" alt="" loading="lazy"><div class="logo"><img src="demo-adega/img/logo.svg" alt=""></div></div><div class="corpo"><b>Adega e bar</b><small>Combos, drinks montados e entrega de madrugada</small><i>Abrir exemplo →</i></div></a>
+    <a class="demo" href="demo-doceria/index.html"><div class="capa"><img src="demo-doceria/img/capa.webp" alt="" loading="lazy"><div class="logo"><img src="demo-doceria/img/logo.svg" alt=""></div></div><div class="corpo"><b>Doceria, açaí e café</b><small>Açaí montado, sabores de brigadeiro e encomendas</small><i>Abrir exemplo →</i></div></a>
+  </div>
+  <p class="nota-demo">Os estabelecimentos dos exemplos são fictícios; fotos de banco de imagens e preços apenas de referência.</p>
+</div></section>
+
+<section class="faixa"><div class="dentro">
+  <span class="rotulo">O que vem no cardápio</span>
+  <h2>Tudo o que o cliente precisa para pedir sem perguntar</h2>
+  <p class="sub">E tudo o que você precisa para vender mais e atender mais rápido.</p>
+  <ul class="recursos">
+    <li><span class="ic">🟢</span><b>Pedido pronto no WhatsApp</b><span>Itens, total, endereço, pagamento e troco numa mensagem só.</span></li>
+    <li><span class="ic">🍕</span><b>Tamanhos, sabores e adicionais</b><span>Broto ou grande, borda, ponto, acompanhamentos. O preço soma sozinho.</span></li>
+    <li><span class="ic">🛵</span><b>Taxa de entrega por bairro</b><span>Pedido mínimo e entrega grátis acima de um valor, se você quiser.</span></li>
+    <li><span class="ic">⭐</span><b>Destaques e promoções</b><span>Mais vendidos, combos e preço "de/por" logo no topo.</span></li>
+    <li><span class="ic">➕</span><b>"Peça também" na sacola</b><span>Bebidas e sobremesas sugeridas na hora de fechar o pedido.</span></li>
+    <li><span class="ic">🕒</span><b>Aberto ou fechado na hora certa</b><span>Mostra "fecha às 23h" ou "abre amanhã às 11h" sozinho.</span></li>
+    <li><span class="ic">🚫</span><b>Produto esgotado</b><span>Acabou? Marca como esgotado e ninguém pede o que não tem.</span></li>
+    <li><span class="ic">🔎</span><b>Busca e categorias</b><span>O cliente acha o que quer em dois toques.</span></li>
+    <li><span class="ic">📱</span><b>Link e QR Code</b><span>Para a bio do Instagram, o Google, as mesas e as embalagens.</span></li>
+    <li><span class="ic">🎨</span><b>A cara do seu negócio</b><span>Logo, cores, fontes e fotos dos seus produtos.</span></li>
+    <li><span class="ic">💾</span><b>Lembra o cliente</b><span>Nome e endereço ficam salvos no celular dele para o próximo pedido.</span></li>
+    <li><span class="ic">⚡</span><b>Leve e rápido</b><span>Página leve, que abre rápido no celular. Sem cadastro e sem app.</span></li>
+  </ul>
+</div></section>
+
+<section class="faixa mensagem"><div class="dentro">
+  <div>
+    <span class="rotulo">Na prática</span>
+    <h2>É assim que o pedido chega para você</h2>
+    <p class="sub">Sem ida e volta de mensagens. É só conferir e confirmar.</p>
+    <ul class="check">
+      <li>Cada item com tamanho, adicionais e observação</li>
+      <li>Subtotal, taxa do bairro e total já calculados</li>
+      <li>Nome, endereço, forma de pagamento e troco</li>
+      <li>Funciona com o WhatsApp que você já usa</li>
+    </ul>
+  </div>
+  <div class="chat" aria-label="Exemplo de mensagem de pedido">
+    <div class="balao">
+      <b>Novo pedido · Forno Nonna</b><br><br>
+      <b>1x Margherita</b> · R$ 82,00<br>
+      &nbsp;&nbsp;Tamanho: Grande<br>
+      &nbsp;&nbsp;Borda recheada: Catupiry<br>
+      <b>1x Petit gâteau</b> · R$ 26,90<br><br>
+      Subtotal: R$ 108,90<br>
+      Entrega (Centro): R$ 6,00<br>
+      <b>Total: R$ 114,90</b><br><br>
+      <b>Nome:</b> Mariana<br>
+      <b>Entregar em:</b> Rua das Flores, 120, ap. 12 · Centro<br>
+      <b>Pagamento:</b> Dinheiro · troco para R$ 150
+      <span class="hora">20:14</span>
+    </div>
+  </div>
+</div></section>
+
+<section class="faixa"><div class="dentro">
+  <span class="rotulo">Comparativo</span>
+  <h2>Por que ter o seu próprio cardápio</h2>
+  <div class="tabela-wrap">
+    <table>
+      <thead><tr><th></th><th class="nosso">Cardápio digital próprio</th><th>Aplicativo de delivery</th><th>PDF ou foto</th></tr></thead>
+      <tbody>
+        <tr><td>Comissão sobre cada pedido</td><td class="nosso"><span class="sim">Não</span></td><td><span class="nao">Sim</span></td><td><span class="sim">Não</span></td></tr>
+        <tr><td>Contato direto com o cliente</td><td class="nosso"><span class="sim">Sim</span>, pelo WhatsApp</td><td>Pela plataforma</td><td><span class="sim">Sim</span></td></tr>
+        <tr><td>Pedido organizado com total</td><td class="nosso"><span class="sim">Sim</span></td><td><span class="sim">Sim</span></td><td><span class="nao">Não</span></td></tr>
+        <tr><td>Fotos, busca e promoções</td><td class="nosso"><span class="sim">Sim</span></td><td><span class="sim">Sim</span></td><td><span class="nao">Não</span></td></tr>
+        <tr><td>Sua marca sem concorrentes ao lado</td><td class="nosso"><span class="sim">Sim</span></td><td><span class="nao">Não</span></td><td><span class="sim">Sim</span></td></tr>
+        <tr><td>Mudar preço na hora</td><td class="nosso"><span class="sim">Sim</span></td><td><span class="sim">Sim</span></td><td>Refazer o arquivo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="obs-tabela">Dá para usar junto com os aplicativos: muitos negócios mantêm o app para atrair clientes novos e mandam o link próprio para quem já conhece a casa, que pede de novo sem comissão.</p>
+</div></section>
+
+<section class="faixa"><div class="dentro">
+  <span class="rotulo">Como funciona</span>
+  <h2>Você não precisa entender de tecnologia</h2>
+  <p class="sub">Eu cuido de tudo. Você só confere e aprova.</p>
+  <ol class="passos">
+    <li><b>Você me envia o que tem</b><span>Foto do cardápio atual, logo, fotos dos produtos, horários e taxas de entrega.</span></li>
+    <li><b>Eu monto e te mostro</b><span>Você recebe o link para testar no celular e pedir os ajustes.</span></li>
+    <li><b>No ar, com QR Code</b><span>Link próprio para divulgar e QR Code pronto para imprimir.</span></li>
+  </ol>
+</div></section>
+
+<section class="faixa"><div class="dentro faq">
+  <span class="rotulo">Dúvidas</span>
+  <h2>Perguntas frequentes</h2>
+  <details><summary>O cliente precisa baixar algum aplicativo?</summary><p>Não. O cardápio abre no navegador do celular, pelo link ou pelo QR Code, em iPhone e Android.</p></details>
+  <details><summary>Como eu recebo os pedidos?</summary><p>No seu WhatsApp, como uma mensagem normal, já com os itens, o total, o endereço e a forma de pagamento. Você confirma com o cliente ali mesmo.</p></details>
+  <details><summary>E o pagamento?</summary><p>Continua do jeito que você já faz: Pix, cartão na entrega, dinheiro ou vale-refeição. O cliente escolhe no cardápio e, se for dinheiro, já informa o troco.</p></details>
+  <details><summary>Posso mudar preços e produtos depois?</summary><p>Sim. Preço novo, produto esgotado, promoção da semana: é só me mandar uma mensagem que eu atualizo.</p></details>
+  <details><summary>Serve para o meu tipo de negócio?</summary><p>Serve para hamburguerias, pizzarias, adegas, docerias, açaiterias, marmitarias, restaurantes, padarias e cafeterias. Os exemplos acima mostram alguns segmentos.</p></details>
+  <details><summary>Quanto custa?</summary><p>Depende do tamanho do cardápio e da quantidade de fotos. Me chame no WhatsApp que eu passo um orçamento sem compromisso.</p></details>
+</div></section>
+
+<section class="faixa" id="contato"><div class="dentro">
+  <div class="final">
+    <h2>Vamos colocar o seu cardápio no ar?</h2>
+    <p>Me chame no WhatsApp, conte sobre o seu negócio e receba uma proposta sem compromisso.</p>
+    <a class="btn btn-whats" data-whats="Olá! Quero um cardápio digital para o meu negócio." href="#contato" target="_blank" rel="noopener">Falar no WhatsApp</a>
+  </div>
+</div></section>
+</main>
+
+<footer class="faixa"><div class="dentro">
+  <span><b data-marca>Cardápio Digital</b><span data-cidade></span></span>
+  <span data-insta-linha hidden>Instagram: <a data-insta href="#" target="_blank" rel="noopener"></a></span>
+</div></footer>
+
+<a class="wa-fixo" data-whats="Olá! Vim pelo site e quero saber sobre o cardápio digital." href="#contato" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg></a>
+
+<script>
+  // aplica os dados do VENDEDOR na página
+  const numero = VENDEDOR.whatsapp.replace(/\D/g, "");
+  document.querySelectorAll("[data-whats]").forEach((a) => { a.href = "https://wa.me/" + numero + "?text=" + encodeURIComponent(a.dataset.whats); });
+  document.querySelectorAll("[data-marca]").forEach((el) => { el.textContent = VENDEDOR.marca; });
+  document.querySelectorAll("[data-cidade]").forEach((el) => { el.textContent = VENDEDOR.cidade ? " · " + VENDEDOR.cidade : ""; });
+  if (VENDEDOR.instagram) {
+    const usuario = VENDEDOR.instagram.replace("@", "");
+    const a = document.querySelector("[data-insta]"); a.href = "https://instagram.com/" + usuario; a.textContent = "@" + usuario;
+    document.querySelector("[data-insta-linha]").hidden = false;
+  }
+</script>
+</body>
+</html>

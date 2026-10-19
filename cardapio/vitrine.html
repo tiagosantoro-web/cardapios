@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cardápio digital · exemplos</title>
+<meta name="description" content="Exemplos de cardápio digital com pedido pelo WhatsApp: hamburgueria, pizzaria, adega e doceria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* Cardápio Digital — modelo-base
+   As cores e fontes vêm do arquivo dados.js de cada cliente (tema).
+   Não é preciso editar este arquivo para criar um novo cardápio. */
+
+:root {
+  --primaria: #e85d04;
+  --sobre-primaria: #ffffff;
+  --secundaria: #ffba08;
+  --fundo: #fff8f0;
+  --superficie: #ffffff;
+  --texto: #1b1b1b;
+  --texto-suave: #6b6b6b;
+  --borda: rgba(0, 0, 0, 0.08);
+  --sombra: 0 8px 28px rgba(0, 0, 0, 0.08);
+  --raio: 18px;
+  --verde-whats: #1fa855;
+  --fonte-titulo: "Anton", system-ui, sans-serif;
+  --fonte-texto: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--fonte-texto);
+  background: var(--fundo);
+  color: var(--texto);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--primaria) 70%, transparent); outline-offset: 2px; }
+
+.app { max-width: 560px; margin: 0 auto; min-height: 100vh; background: var(--fundo); position: relative; padding-bottom: 110px; }
+@media (min-width: 600px) {
+  body { background: color-mix(in srgb, var(--fundo) 82%, #000 18%); }
+  .app { box-shadow: 0 0 60px rgba(0,0,0,.22); }
+}
+
+/* Faixa de demonstração */
+.faixa-demo {
+  background: #141216; color: #f1e7c9; font-size: 11.5px; font-weight: 700; letter-spacing: .03em;
+  text-align: center; padding: 7px 12px;
+}
+
+/* Capa */
+.capa { position: relative; height: 220px; overflow: hidden; background: color-mix(in srgb, var(--primaria) 60%, #000); }
+.capa-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.capa-arte {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--secundaria) 70%, transparent) 0, transparent 45%),
+    radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--primaria) 90%, #000 10%) 0, transparent 55%),
+    linear-gradient(135deg, var(--primaria), color-mix(in srgb, var(--primaria) 60%, #000 40%));
+}
+.capa-arte span { position: absolute; font-size: 120px; right: -10px; bottom: -24px; transform: rotate(-12deg); filter: drop-shadow(0 10px 20px rgba(0,0,0,.35)); }
+.capa-arte span + span { font-size: 54px; right: auto; left: 22px; top: 18px; bottom: auto; transform: rotate(14deg); opacity: .55; }
+.capa::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.25) 0, transparent 35%, transparent 55%, rgba(0,0,0,.4)); pointer-events: none; }
+.capa-acoes { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; z-index: 2; }
+.btn-redondo {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255,255,255,.94); color: #111; box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
+.btn-redondo svg { width: 20px; height: 20px; }
+
+/* Cabeçalho do estabelecimento */
+.perfil { position: relative; margin: -48px 16px 0; background: var(--superficie); border-radius: var(--raio); box-shadow: var(--sombra); padding: 54px 18px 18px; text-align: center; z-index: 3; }
+.logo {
+  position: absolute; top: -44px; left: 50%; transform: translateX(-50%);
+  width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--superficie);
+  background: var(--primaria); color: var(--sobre-primaria); display: grid; place-items: center; overflow: hidden;
+  font-family: var(--fonte-titulo); font-size: 30px; box-shadow: 0 6px 18px rgba(0,0,0,.18);
+}
+.logo img { width: 100%; height: 100%; object-fit: cover; }
+.perfil h1 { font-family: var(--fonte-titulo); font-size: 30px; line-height: 1.05; letter-spacing: .01em; text-wrap: balance; }
+.perfil .slogan { color: var(--texto-suave); font-size: 14px; margin-top: 5px; text-wrap: balance; }
+.status { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 99px; }
+.status span { font-weight: 600; }
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.status.aberto { color: #0f7a55; background: #dcf5ea; }
+.status.aberto::before { animation: pulso 2s infinite; }
+.status.fechado { color: #b42318; background: #fde8e6; }
+@keyframes pulso { 0%, 100% { box-shadow: 0 0 0 0 rgba(15,122,85,.5); } 50% { box-shadow: 0 0 0 5px rgba(15,122,85,0); } }
+.infos { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 13px; color: var(--texto-suave); }
+.infos span { display: inline-flex; align-items: center; gap: 4px; }
+.infos svg { width: 15px; height: 15px; }
+.infos b { color: var(--texto); }
+.selo-frete { display: inline-block; margin-top: 10px; font-size: 12.5px; font-weight: 700; color: var(--primaria); background: color-mix(in srgb, var(--primaria) 10%, transparent); padding: 5px 12px; border-radius: 99px; }
+.contatos { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+.contato { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--texto-suave); padding: 9px 2px; border-radius: 12px; background: color-mix(in srgb, var(--primaria) 8%, transparent); transition: background .2s; }
+.contato:active { background: color-mix(in srgb, var(--primaria) 16%, transparent); }
+.contato svg { width: 22px; height: 22px; color: var(--primaria); }
+.aviso-loja { margin-top: 14px; font-size: 13px; font-weight: 600; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--secundaria) 22%, var(--superficie)); }
+
+/* Busca e categorias */
+.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--fundo) 92%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 12px 0 10px; margin-top: 14px; border-bottom: 1px solid var(--borda); }
+.busca { margin: 0 16px 10px; position: relative; }
+.busca input { width: 100%; height: 44px; border-radius: 12px; border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); padding: 0 14px 0 42px; font: inherit; font-size: 16px; outline: none; }
+.busca input::placeholder { color: var(--texto-suave); }
+.busca input:focus { border-color: var(--primaria); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primaria) 20%, transparent); }
+.busca svg { position: absolute; left: 13px; top: 12px; width: 20px; height: 20px; color: var(--texto-suave); }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; padding: 8px 14px; border-radius: 99px; background: var(--superficie); border: 1px solid var(--borda); font-size: 14px; font-weight: 700; white-space: nowrap; transition: background .2s, color .2s; }
+.chip.ativo { background: var(--primaria); border-color: var(--primaria); color: var(--sobre-primaria); }
+
+/* Seções */
+.secao { padding: 24px 16px 4px; scroll-margin-top: 118px; }
+.secao h2 { font-family: var(--fonte-titulo); font-size: 23px; letter-spacing: .01em; display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+.secao h2 small { font-family: var(--fonte-texto); font-size: 12.5px; font-weight: 600; color: var(--texto-suave); margin-left: auto; }
+.aviso-categoria { font-size: 13px; color: var(--texto-suave); margin: -6px 0 12px; }
+
+/* Destaques (carrossel) */
+.destaques { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; padding: 2px 16px 12px; scrollbar-width: none; }
+.destaques::-webkit-scrollbar { display: none; }
+.destaque { flex: none; width: 76%; scroll-snap-align: start; scroll-margin-left: 16px; background: var(--superficie); border-radius: var(--raio); overflow: hidden; box-shadow: var(--sombra); text-align: left; cursor: pointer; display: flex; flex-direction: column; }
+.destaque .foto { height: 160px; }
+.destaque .corpo { padding: 12px 14px 14px; display: flex; flex-direction: column; flex: 1; }
+.destaque h3 { font-size: 16px; line-height: 1.25; }
+.destaque p { font-size: 13px; color: var(--texto-suave); margin: 3px 0 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.destaque .rodape { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+
+/* Cards de produto */
+.lista { display: flex; flex-direction: column; gap: 12px; }
+.item { display: flex; gap: 12px; background: var(--superficie); border-radius: var(--raio); padding: 12px; box-shadow: 0 1px 0 var(--borda), 0 4px 14px rgba(0,0,0,.04); text-align: left; width: 100%; position: relative; cursor: pointer; transition: transform .15s; }
+.item:active, .destaque:active { transform: scale(.985); }
+.item .corpo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.item h3 { font-size: 15.5px; line-height: 1.25; }
+.item p { font-size: 13px; color: var(--texto-suave); margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.item .rodape { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.item .foto { width: 108px; height: 108px; border-radius: 14px; flex: none; }
+.item.esgotado .foto, .item.esgotado h3, .item.esgotado p, .item.esgotado .preco { opacity: .45; filter: grayscale(.6); }
+.rotulo-esgotado { font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--texto-suave); padding: 6px 10px; border-radius: 8px; border: 1px dashed var(--borda); }
+
+.foto { position: relative; overflow: hidden; background: color-mix(in srgb, var(--primaria) 12%, var(--superficie)); }
+.foto img { width: 100%; height: 100%; object-fit: cover; }
+.foto .emoji {
+  position: absolute; inset: 0; display: grid; place-items: center; font-size: 52px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.55), transparent 50%),
+    linear-gradient(145deg, color-mix(in srgb, var(--secundaria) 45%, var(--superficie)), color-mix(in srgb, var(--primaria) 35%, var(--superficie)));
+}
+.foto .emoji span { filter: drop-shadow(0 8px 10px rgba(0,0,0,.25)); }
+.destaque .foto .emoji { font-size: 80px; }
+
+.preco { font-weight: 800; font-size: 16px; color: var(--primaria); white-space: nowrap; display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 0 4px; }
+.preco s { font-weight: 500; font-size: 12.5px; color: var(--texto-suave); }
+.preco small { font-weight: 600; font-size: 11px; color: var(--texto-suave); }
+.tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 5px; }
+.tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 3px 7px; border-radius: 6px; background: color-mix(in srgb, var(--secundaria) 28%, var(--superficie)); color: color-mix(in srgb, var(--texto) 85%, var(--primaria)); }
+.tag.promo { background: #e11d48; color: #fff; }
+.tag.mais-vendido { background: var(--primaria); color: var(--sobre-primaria); }
+.tag.vegano, .tag.vegetariano { background: #dff3e4; color: #1d6b36; }
+.tag.picante { background: #fde3dc; color: #b3261e; }
+.foto .tags { position: absolute; left: 8px; top: 8px; z-index: 1; }
+.foto .tags .tag { box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+
+.add { position: relative; width: 36px; height: 36px; border-radius: 11px; background: var(--primaria); color: var(--sobre-primaria); display: grid; place-items: center; flex: none; box-shadow: 0 4px 10px color-mix(in srgb, var(--primaria) 40%, transparent); transition: transform .15s; }
+.add:active { transform: scale(.9); }
+.add svg { width: 18px; height: 18px; }
+.badge { position: absolute; top: -7px; right: -7px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 99px; background: var(--texto); color: var(--fundo); font-size: 11px; font-weight: 800; display: grid; place-items: center; border: 2px solid var(--superficie); }
+.qtd { display: flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primaria) 10%, transparent); border-radius: 11px; padding: 3px; }
+.qtd button { width: 30px; height: 30px; border-radius: 8px; background: var(--superficie); font-weight: 800; color: var(--primaria); font-size: 17px; line-height: 1; }
+.qtd span { min-width: 16px; text-align: center; font-weight: 800; font-size: 14px; }
+.qtd.grande button { width: 40px; height: 40px; font-size: 20px; }
+.qtd.grande span { min-width: 22px; font-size: 16px; }
+
+.vazio { text-align: center; color: var(--texto-suave); padding: 40px 16px; }
+
+/* Rodapé */
+.rodape-pagina { margin: 30px 16px 0; padding: 22px 20px; border-radius: var(--raio); background: var(--superficie); font-size: 13px; color: var(--texto-suave); text-align: center; line-height: 1.7; }
+.rodape-pagina b { color: var(--texto); font-size: 15px; }
+.rodape-pagina p { margin-top: 6px; }
+.rodape-pagina .assinatura { margin-top: 12px; font-size: 11px; opacity: .85; }
+.rodape-pagina .credito { display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 700; color: var(--texto-suave); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Barra da sacola */
+.sacola-barra {
+  position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 160%); transition: transform .3s cubic-bezier(.2,.9,.3,1.2);
+  width: calc(100% - 28px); max-width: 532px; z-index: 40;
+  background: var(--primaria); color: var(--sobre-primaria); border-radius: 16px; padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 15px;
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--primaria) 45%, transparent);
+}
+.sacola-barra.visivel { transform: translate(-50%, 0); }
+.sacola-barra .esq { display: flex; align-items: center; gap: 8px; }
+.sacola-barra svg { width: 20px; height: 20px; }
+.sacola-barra .contador { background: color-mix(in srgb, var(--sobre-primaria) 22%, transparent); border-radius: 8px; padding: 1px 8px; margin-right: 2px; }
+
+/* Botão flutuante de WhatsApp (quando a sacola está vazia) */
+.wa-flutuante { position: fixed; right: max(16px, calc(50% - 264px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 39; width: 56px; height: 56px; border-radius: 50%; background: #25d366; color: #fff; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(37,211,102,.45); transition: opacity .2s; }
+.wa-flutuante svg { width: 30px; height: 30px; }
+.wa-flutuante.oculto { opacity: 0; pointer-events: none; }
+
+/* Painéis (sacola, produto, QR) */
+.fundo-escuro { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 50; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.fundo-escuro.aberto { opacity: 1; pointer-events: auto; }
+.painel {
+  position: fixed; left: 50%; bottom: 0; transform: translate(-50%, 100%); transition: transform .3s ease, visibility 0s linear .3s; visibility: hidden;
+  width: 100%; max-width: 560px; max-height: 92vh; max-height: 92dvh; overflow-y: auto; overscroll-behavior: contain; z-index: 51;
+  background: var(--fundo); border-radius: 22px 22px 0 0; padding: 10px 18px calc(24px + env(safe-area-inset-bottom, 0px));
+}
+.painel.aberto { transform: translate(-50%, 0); visibility: visible; transition-delay: 0s; }
+.painel .alca { width: 44px; height: 5px; border-radius: 9px; margin: 0 auto 14px; background: color-mix(in srgb, var(--texto) 20%, transparent); }
+.painel h2 { font-family: var(--fonte-titulo); font-size: 25px; line-height: 1.15; margin-bottom: 8px; padding-right: 40px; }
+.painel .fechar { position: absolute; right: 14px; top: 14px; z-index: 3; width: 36px; height: 36px; border-radius: 50%; background: var(--superficie); display: grid; place-items: center; font-size: 22px; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.painel .foto-grande { height: 240px; border-radius: 16px; margin: 6px 0 14px; }
+.painel .foto-grande .emoji { font-size: 120px; }
+.painel p.desc { color: var(--texto-suave); font-size: 14.5px; }
+.painel p.detalhe { margin-top: 6px; font-size: 13.5px; }
+.preco-produto { margin-top: 10px; }
+.preco-produto .preco { font-size: 20px; }
+.painel-rodape { position: sticky; bottom: calc(-24px - env(safe-area-inset-bottom, 0px)); margin: 16px -18px 0; padding: 12px 18px calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--fundo); border-top: 1px solid var(--borda); display: flex; gap: 12px; align-items: center; z-index: 2; }
+.painel-rodape .btn-principal { margin-top: 0; flex: 1; }
+
+/* Opções do produto (tamanho, adicionais...) */
+.grupo { border: 0; margin-top: 18px; }
+.grupo legend { width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--texto) 6%, transparent); font-weight: 800; font-size: 15px; margin-bottom: 4px; }
+.grupo legend small { font-weight: 700; font-size: 11.5px; color: var(--texto-suave); white-space: nowrap; }
+.grupo.pendente legend { background: #fde8e6; color: #b42318; }
+.grupo.pendente legend small { color: #b42318; }
+.opcao { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--borda); cursor: pointer; font-size: 14.5px; }
+.opcao:last-child { border-bottom: 0; }
+.opcao input { width: 20px; height: 20px; accent-color: var(--primaria); flex: none; }
+.opcao .nome-opcao { flex: 1; font-weight: 600; }
+.opcao .nome-opcao small { display: block; font-weight: 500; font-size: 12.5px; color: var(--texto-suave); }
+.opcao .preco-opcao { font-weight: 700; font-size: 13.5px; color: var(--texto-suave); white-space: nowrap; }
+.opcao.indisponivel { opacity: .5; cursor: not-allowed; }
+.opcao:has(input:disabled):not(.indisponivel) { opacity: .5; }
+
+/* Sacola */
+.linha-sacola { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--borda); }
+.linha-sacola img, .linha-sacola .mini-emoji, .linha-sacola .emoji { width: 52px; height: 52px; border-radius: 12px; object-fit: cover; flex: none; }
+.linha-sacola .mini-emoji, .linha-sacola .emoji { display: grid; place-items: center; font-size: 28px; position: static; background: color-mix(in srgb, var(--primaria) 12%, var(--superficie)); }
+.linha-sacola .nome { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 700; line-height: 1.3; }
+.linha-sacola .nome small { display: block; color: var(--texto-suave); font-weight: 500; font-size: 12.5px; }
+.linha-sacola .nome b { display: block; margin-top: 3px; color: var(--primaria); font-size: 14px; }
+.linha-sacola .qtd button { font-size: 15px; }
+
+.sugestoes { margin: 16px 0 6px; }
+.sugestoes > p { font-weight: 800; font-size: 14px; margin-bottom: 8px; }
+.sugestoes-lista { display: flex; gap: 10px; overflow-x: auto; margin: 0 -18px; padding: 0 18px 6px; scrollbar-width: none; }
+.sugestoes-lista::-webkit-scrollbar { display: none; }
+.sugestao { flex: none; width: 128px; background: var(--superficie); border-radius: 14px; padding: 8px; position: relative; display: flex; flex-direction: column; gap: 2px; font-size: 12.5px; box-shadow: 0 1px 0 var(--borda); }
+.sugestao .foto { height: 76px; border-radius: 10px; margin-bottom: 4px; }
+.sugestao .foto .emoji { font-size: 34px; }
+.sugestao span { font-weight: 700; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em; }
+.sugestao b { color: var(--primaria); }
+.sugestao .add { position: absolute; right: 8px; bottom: 8px; width: 30px; height: 30px; border-radius: 9px; }
+
+.totais { padding: 14px 0 4px; font-size: 14px; margin-top: 12px; border-top: 1px dashed color-mix(in srgb, var(--texto) 18%, transparent); }
+.totais div { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; color: var(--texto-suave); }
+.totais .total { color: var(--texto); font-weight: 800; font-size: 18px; padding-top: 8px; }
+
+.campo { margin-top: 14px; }
+.campo label, .campo .rotulo { display: block; font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+.campo input, .campo textarea, .campo select { width: 100%; border-radius: 12px; border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); padding: 12px; font: inherit; font-size: 16px; outline: none; }
+.campo input:focus, .campo textarea:focus, .campo select:focus { border-color: var(--primaria); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primaria) 18%, transparent); }
+.campo textarea { min-height: 64px; resize: vertical; }
+.segmentado { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.segmentado button, .escolhas button { padding: 11px; border-radius: 12px; border: 1.5px solid var(--borda); background: var(--superficie); font-weight: 700; font-size: 14px; }
+.segmentado button.ativo, .escolhas button.ativo { border-color: var(--primaria); background: color-mix(in srgb, var(--primaria) 12%, var(--superficie)); color: var(--primaria); }
+.escolhas { display: flex; flex-wrap: wrap; gap: 8px; }
+.escolhas button { padding: 9px 14px; }
+.nota { font-size: 13px; font-weight: 600; padding: 10px 12px; border-radius: 12px; margin: 4px 0 8px; background: #fff4d6; color: #7a4b00; }
+.nota.suave { background: color-mix(in srgb, var(--texto) 6%, transparent); color: var(--texto-suave); margin-top: 10px; }
+.nota.destaque-nota { background: color-mix(in srgb, var(--primaria) 12%, transparent); color: var(--primaria); text-align: center; }
+.aviso { font-size: 13px; font-weight: 600; color: #b42318; margin-top: 8px; }
+
+.btn-principal { width: 100%; margin-top: 16px; padding: 15px; border-radius: 14px; background: var(--verde-whats); color: #fff; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(31,168,85,.3); }
+.btn-principal svg { width: 22px; height: 22px; }
+.btn-principal.tema { background: var(--primaria); color: var(--sobre-primaria); box-shadow: 0 8px 20px color-mix(in srgb, var(--primaria) 30%, transparent); }
+.btn-principal:disabled { opacity: .5; box-shadow: none; cursor: not-allowed; }
+.btn-secundario { width: 100%; margin-top: 10px; padding: 13px; border-radius: 14px; border: 1.5px solid var(--borda); background: var(--superficie); font-weight: 700; font-size: 15px; }
+.rodape-demo { font-size: 12px; color: var(--texto-suave); margin-top: 10px; }
+
+/* Prévia da mensagem (demonstração) */
+.previa-whats { margin: 14px 0 4px; padding: 16px 14px; border-radius: 16px; background: #e5ddd5; background-image: radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px); background-size: 14px 14px; }
+.previa-whats .balao { margin-left: auto; max-width: 92%; background: #d9fdd3; color: #111b21; border-radius: 12px 2px 12px 12px; padding: 10px 12px; font-size: 13.5px; line-height: 1.5; box-shadow: 0 1px 1px rgba(0,0,0,.12); }
+
+.qr-caixa { background: #fff; padding: 16px; border-radius: 16px; width: 232px; margin: 12px auto; box-shadow: var(--sombra); }
+.qr-caixa canvas, .qr-caixa img { margin: 0 auto; }
+.centro { text-align: center; }
+.centro h2 { padding-right: 0; }
+.link-copia { font-size: 13px; word-break: break-all; color: var(--texto-suave); }
+
+.toast { position: fixed; left: 50%; top: 18px; transform: translate(-50%, -160%); background: #111; color: #fff; padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; z-index: 60; transition: transform .3s; max-width: calc(100% - 32px); text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.toast.visivel { transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+
+/* Barra da vitrine (só existe na demonstração) */
+.vitrine { position: relative; z-index: 30; background: #141216; color: #f3f0f6; padding-block: 14px 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); font-family: "Manrope", system-ui, sans-serif; }
+.vitrine-dentro { max-width: 560px; margin: 0 auto; }
+.vitrine-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+.vitrine-topo p { font-size: 12.5px; color: #b9b2c2; line-height: 1.35; }
+.vitrine-topo p b { color: #fff; font-size: 14px; display: block; }
+.vitrine-topo a { flex: none; font-size: 12.5px; font-weight: 800; color: #141216; background: #ffd166; padding: 8px 12px; border-radius: 10px; }
+.vitrine-botoes { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.vitrine-botoes::-webkit-scrollbar { display: none; }
+.vitrine-botoes button { flex: none; padding: 9px 14px; border-radius: 10px; background: #26232b; color: #e9e5ee; font-weight: 700; font-size: 14px; border: 1px solid #3a3641; }
+.vitrine-botoes button[aria-pressed="true"] { background: #fff; color: #141216; border-color: #fff; }
+.vitrine-botoes button:focus-visible { outline: 2px solid #ffd166; outline-offset: 2px; }
+.vitrine + .app .faixa-demo { display: none; }
+</style>
+</head>
+<body>
+<div class="vitrine"><div class="vitrine-dentro">
+  <div class="vitrine-topo">
+    <p><b>Cardápio digital com pedido no WhatsApp</b>Escolha um segmento, monte um pedido e veja a mensagem pronta.</p>
+    <a href="index.html">Quero o meu</a>
+  </div>
+  <div class="vitrine-botoes" role="group" aria-label="Escolha o segmento">
+    <button type="button" data-demo="hamburgueria" aria-pressed="false">&#127828; Hamburgueria</button>
+    <button type="button" data-demo="pizzaria" aria-pressed="false">&#127829; Pizzaria</button>
+    <button type="button" data-demo="adega" aria-pressed="false">&#127870; Adega</button>
+    <button type="button" data-demo="doceria" aria-pressed="false">&#129473; Doceria e a&ccedil;a&iacute;</button>
+  </div>
+</div></div>
+<div class="app" id="app"></div>
+<script>
+var DEMOS = {};
+// EXEMPLO ILUSTRATIVO: estabelecimento fictício, fotos de banco de imagens (Unsplash) e preços de referência.
+(function () {
+  const TURBINAR = { titulo: "Turbine seu burger", max: 4, itens: [
+    { nome: "Bacon crocante", preco: 5 },
+    { nome: "Cheddar extra", preco: 4 },
+    { nome: "Carne extra (90 g)", preco: 9 },
+    { nome: "Cebola caramelizada", preco: 3 },
+    { nome: "Ovo na chapa", preco: 3 }
+  ]};
+  const VIRAR_COMBO = { titulo: "Transforme em combo", max: 1, itens: [
+    { nome: "Batata média + refri lata", desc: "Sai R$ 6 mais barato que separado", preco: 19.9 }
+  ]};
+  const REFRI = { titulo: "Refrigerante", min: 1, max: 1, itens: [
+    { nome: "Cola" }, { nome: "Cola zero" }, { nome: "Guaraná" }, { nome: "Laranja" }
+  ]};
+
+  DEMOS["hamburgueria"] = {
+    demo: true,
+    nome: "Brasa Burger",
+    slogan: "Smash burger na chapa, pão brioche e muito queijo",
+    url: "",
+    logo: "demo-hamburgueria/img/logo.svg", banner: "demo-hamburgueria/img/capa.webp",
+    emoji: "🍔", emoji2: "🍟",
+    tema: { primaria: "#E4572E", secundaria: "#FFC914", fundo: "#FFF7EE", superficie: "#FFFFFF", texto: "#1E1A17", textoSuave: "#6E655E", fonteTitulo: "Anton", fonteTexto: "Manrope" },
+    whatsapp: "5511900000000",
+    telefone: "(11) 90000-0000",
+    instagram: "@brasaburger",
+    endereco: "Centro, Itapevi - SP",
+    horarios: [{ dias: [0, 1, 2, 3, 4, 5, 6], abre: "11:00", fecha: "23:30" }],
+    entrega: { taxa: 7, pedidoMinimo: 30, gratisAcima: 90, tempo: "35-50 min", tempoRetirada: "20 min", retirada: true },
+    pagamentos: ["Pix", "Cartão na entrega", "Dinheiro", "Vale-refeição"],
+    assinatura: "Cardápio digital · exemplo ilustrativo",
+    dicaObs: "Ex.: sem cebola, sem picles, molho à parte",
+    categorias: [
+      { nome: "Combos", itens: [
+        { nome: "Combo Brasa", desc: "Smash Duplo + batata média + refri lata. O pedido mais pedido da casa.", preco: 44.9, precoAntigo: 52.7, foto: "demo-hamburgueria/img/combo-brasa.webp", emoji: "🍔", tags: ["promo", "combo"], opcoes: [REFRI] },
+        { nome: "Combo Casal", desc: "2 Brasa Clássico, batata grande com cheddar e bacon e 2 refris lata.", preco: 99.9, precoAntigo: 116.6, foto: "demo-hamburgueria/img/combo-casal.webp", emoji: "🍟", tags: ["combo", "serve-2"] }
+      ]},
+      { nome: "Burgers", aviso: "Todos no pão brioche selado na manteiga. Carne 100% bovina, moída na casa.", itens: [
+        { nome: "Brasa Clássico", desc: "Blend 120 g, cheddar, picles, cebola e molho da casa.", preco: 29.9, foto: "demo-hamburgueria/img/brasa-classico.webp", emoji: "🍔", tags: ["mais-vendido"], opcoes: [TURBINAR, VIRAR_COMBO] },
+        { nome: "Smash Duplo", desc: "Dois smash de 90 g bem selados, cheddar duplo, cebola na chapa e molho da casa.", preco: 36.9, foto: "demo-hamburgueria/img/smash-duplo.webp", emoji: "🍔", tags: ["mais-vendido"], opcoes: [TURBINAR, VIRAR_COMBO] },
+        { nome: "Bacon Lovers", desc: "Dois smash de 90 g, cheddar, muito bacon crocante e maionese defumada.", preco: 39.9, foto: "demo-hamburgueria/img/bacon-lovers.webp", emoji: "🥓", opcoes: [TURBINAR, VIRAR_COMBO] },
+        { nome: "Cheddar Melt", desc: "Blend 150 g, cheddar cremoso escorrendo, bacon e cebola crispy.", preco: 38.9, foto: "demo-hamburgueria/img/cheddar-melt.webp", emoji: "🧀", opcoes: [TURBINAR, VIRAR_COMBO] },
+        { nome: "Brasa Salada", desc: "Blend 150 g, queijo prato, alface americana, tomate, cebola roxa e maionese verde.", preco: 32.9, foto: "demo-hamburgueria/img/salada.webp", emoji: "🥬", opcoes: [TURBINAR, VIRAR_COMBO] },
+        { nome: "Inferno", desc: "Blend 150 g, pepper jack, jalapeño, bacon e molho de pimenta defumada.", preco: 38.9, foto: "demo-hamburgueria/img/inferno.webp", emoji: "🌶️", tags: ["picante"], opcoes: [TURBINAR, VIRAR_COMBO] },
+        { nome: "Brasa Triplo", desc: "Três smash de 90 g, cheddar triplo e bacon. Para quem chega com fome.", preco: 46.9, foto: "demo-hamburgueria/img/brasa-triplo.webp", emoji: "🍔", opcoes: [TURBINAR, VIRAR_COMBO] },
+        { nome: "Chicken Crispy", desc: "Sobrecoxa empanada e crocante, coleslaw, picles e maionese de alho.", preco: 31.9, foto: "demo-hamburgueria/img/chicken-crispy.webp", emoji: "🍗", tags: ["novo"], opcoes: [TURBINAR, VIRAR_COMBO] },
+        { nome: "Veggie da Horta", desc: "Burger de grão-de-bico e quinoa, queijo, guacamole, tomate e rúcula.", preco: 32.9, foto: "demo-hamburgueria/img/veggie.webp", emoji: "🥑", tags: ["vegetariano"], opcoes: [VIRAR_COMBO] }
+      ]},
+      { nome: "Porções", sugerir: true, itens: [
+        { nome: "Batata rústica", desc: "Com casca, páprica e alecrim. Acompanha maionese da casa.", preco: 19.9, foto: "demo-hamburgueria/img/batata-rustica.webp", emoji: "🍟", opcoes: [
+          { titulo: "Tamanho", min: 1, max: 1, itens: [{ nome: "Média", desc: "250 g · serve 1" }, { nome: "Grande", desc: "450 g · serve 2", preco: 9 }] }
+        ]},
+        { nome: "Batata cheddar e bacon", desc: "Batata frita coberta com cheddar cremoso e bacon em cubos.", preco: 32.9, foto: "demo-hamburgueria/img/batata-cheddar.webp", emoji: "🧀", tags: ["mais-vendido", "serve-2"] },
+        { nome: "Onion rings", desc: "12 anéis de cebola empanados na farinha panko, com barbecue.", preco: 26.9, foto: "demo-hamburgueria/img/onion-rings.webp", emoji: "🧅" },
+        { nome: "Frango crocante", desc: "10 tiras de frango empanadas com dois molhos à escolha.", preco: 34.9, foto: "demo-hamburgueria/img/frango-crocante.webp", emoji: "🍗", tags: ["serve-2"] }
+      ]},
+      { nome: "Bebidas", sugerir: true, itens: [
+        { nome: "Milkshake de Oreo", desc: "400 ml. Sorvete de creme batido com Oreo e calda de chocolate.", preco: 22.9, foto: "demo-hamburgueria/img/shake-oreo.webp", emoji: "🥤", tags: ["mais-vendido"] },
+        { nome: "Milkshake de morango", desc: "400 ml. Sorvete de creme com morangos frescos.", preco: 22.9, foto: "demo-hamburgueria/img/shake-morango.webp", emoji: "🍓" },
+        { nome: "Refrigerante lata", desc: "350 ml, bem gelado.", preco: 7, foto: "demo-hamburgueria/img/refrigerante.webp", emoji: "🥤", opcoes: [REFRI] },
+        { nome: "Limonada de morango", desc: "500 ml. Limão espremido na hora, morango e hortelã.", preco: 14.9, foto: "demo-hamburgueria/img/limonada-morango.webp", emoji: "🍹", tags: ["novo"] }
+      ]}
+    ]
+  };
+})();
+
+// EXEMPLO ILUSTRATIVO: estabelecimento fictício, fotos de banco de imagens (Unsplash) e preços de referência.
+(function () {
+  const TAMANHO = (grande) => ({ titulo: "Tamanho", min: 1, max: 1, itens: [
+    { nome: "Broto", desc: "25 cm · 4 fatias" },
+    { nome: "Grande", desc: "35 cm · 8 fatias", preco: grande }
+  ]});
+  const BORDA = { titulo: "Borda recheada", max: 1, itens: [
+    { nome: "Catupiry", preco: 12 }, { nome: "Cheddar", preco: 12 }, { nome: "Chocolate", preco: 14 }
+  ]};
+  const OBS = "Ex.: meia calabresa, sem cebola, bem assada";
+
+  DEMOS["pizzaria"] = {
+    demo: true,
+    nome: "Forno Nonna",
+    slogan: "Massa de longa fermentação, assada no forno a lenha",
+    url: "",
+    logo: "demo-pizzaria/img/logo.svg", banner: "demo-pizzaria/img/capa.webp",
+    emoji: "🍕", emoji2: "🍅",
+    tema: { primaria: "#B3261E", secundaria: "#2E7D32", fundo: "#FBF6EF", superficie: "#FFFFFF", texto: "#2A1D17", textoSuave: "#7A6A60", fonteTitulo: "Fraunces", fonteTexto: "Manrope" },
+    whatsapp: "5511900000000",
+    telefone: "(11) 90000-0000",
+    instagram: "@fornonna",
+    endereco: "Vila Nova Itapevi, Itapevi - SP",
+    horarios: [{ dias: [0, 2, 3, 4, 5, 6], abre: "18:00", fecha: "23:30" }],
+    entrega: {
+      pedidoMinimo: 45, tempo: "45-60 min", tempoRetirada: "25 min", retirada: true,
+      // taxa por bairro: o cliente escolhe o bairro na sacola
+      bairros: [
+        { nome: "Vila Nova Itapevi", taxa: 5 },
+        { nome: "Centro", taxa: 6 },
+        { nome: "Jardim Briquet", taxa: 7 },
+        { nome: "Cohab", taxa: 8 },
+        { nome: "Amador Bueno", taxa: 12 }
+      ]
+    },
+    pagamentos: ["Pix", "Cartão na entrega", "Dinheiro", "Vale-refeição"],
+    assinatura: "Cardápio digital · exemplo ilustrativo",
+    categorias: [
+      { nome: "Promoções", itens: [
+        { nome: "Terça em Dobro", desc: "2 pizzas grandes tradicionais. Diga os sabores na observação.", preco: 119.9, precoAntigo: 144, foto: "demo-pizzaria/img/terca-dobro.webp", emoji: "🍕", tags: ["promo"], dicaObs: "Ex.: 1 margherita e 1 calabresa" },
+        { nome: "Combo Família", desc: "1 pizza grande tradicional + 1 broto doce + refrigerante 2 L.", preco: 109.9, precoAntigo: 128, foto: "demo-pizzaria/img/combo-familia.webp", emoji: "👨‍👩‍👧", tags: ["combo", "serve-4"], dicaObs: "Ex.: grande portuguesa, broto de chocolate, guaraná" }
+      ]},
+      { nome: "Pizzas tradicionais", aviso: "Molho de tomate italiano e muçarela em todas. Meia a meia? Escreva na observação.", itens: [
+        { nome: "Margherita", desc: "Muçarela de búfala, tomate, manjericão fresco e azeite extravirgem.", preco: 42, foto: "demo-pizzaria/img/margherita.webp", emoji: "🍕", tags: ["mais-vendido"], opcoes: [TAMANHO(28), BORDA], dicaObs: OBS },
+        { nome: "Calabresa", desc: "Calabresa artesanal fatiada, cebola roxa e azeitonas pretas.", preco: 39, foto: "demo-pizzaria/img/calabresa.webp", emoji: "🍕", opcoes: [TAMANHO(26), BORDA], dicaObs: OBS },
+        { nome: "Portuguesa", desc: "Presunto, ovos, cebola, ervilha, pimentão e azeitonas.", preco: 44, foto: "demo-pizzaria/img/portuguesa.webp", emoji: "🍳", opcoes: [TAMANHO(28), BORDA], dicaObs: OBS },
+        { nome: "Frango com Catupiry", desc: "Frango desfiado temperado e Catupiry original.", preco: 44, foto: "demo-pizzaria/img/frango-catupiry.webp", emoji: "🍗", tags: ["mais-vendido"], opcoes: [TAMANHO(28), BORDA], dicaObs: OBS },
+        { nome: "Quatro Queijos", desc: "Muçarela, provolone, gorgonzola e parmesão.", preco: 46, foto: "demo-pizzaria/img/quatro-queijos.webp", emoji: "🧀", opcoes: [TAMANHO(30), BORDA], dicaObs: OBS },
+        { nome: "Pepperoni", desc: "Pepperoni fatiado fino e mel de pimenta.", preco: 46, foto: "demo-pizzaria/img/pepperoni.webp", emoji: "🌶️", tags: ["picante"], opcoes: [TAMANHO(30), BORDA], dicaObs: OBS }
+      ]},
+      { nome: "Pizzas especiais", itens: [
+        { nome: "Burrata e Rúcula", desc: "Burrata inteira no centro, rúcula, tomate-cereja e pesto de manjericão.", preco: 54, foto: "demo-pizzaria/img/burrata.webp", emoji: "🌿", tags: ["novo"], opcoes: [TAMANHO(34)], dicaObs: OBS },
+        { nome: "Parma e Rúcula", desc: "Presunto de Parma, rúcula, lascas de parmesão e redução de balsâmico.", preco: 56, foto: "demo-pizzaria/img/parma-rucula.webp", emoji: "🍕", opcoes: [TAMANHO(36)], dicaObs: OBS },
+        { nome: "Horta da Nonna", desc: "Abobrinha, berinjela, pimentões assados, cebola roxa e muçarela.", preco: 48, foto: "demo-pizzaria/img/vegetariana.webp", emoji: "🥗", tags: ["vegetariano"], opcoes: [TAMANHO(30)], dicaObs: OBS }
+      ]},
+      { nome: "Entradas", itens: [
+        { nome: "Bruschetta de tomate", desc: "4 fatias de pão de fermentação natural, tomate, manjericão e azeite.", preco: 28.9, foto: "demo-pizzaria/img/bruschetta.webp", emoji: "🍅" }
+      ]},
+      { nome: "Sobremesas", sugerir: true, itens: [
+        { nome: "Petit gâteau", desc: "Bolinho de chocolate com recheio cremoso e sorvete de creme.", preco: 26.9, foto: "demo-pizzaria/img/petit-gateau.webp", emoji: "🍫" },
+        { nome: "Brownie com sorvete", desc: "Brownie de chocolate meio amargo, sorvete e calda quente.", preco: 22.9, foto: "demo-pizzaria/img/brownie.webp", emoji: "🍨", esgotado: true }
+      ]},
+      { nome: "Bebidas", sugerir: true, itens: [
+        { nome: "Vinho tinto da casa", desc: "Garrafa 750 ml. Tinto seco chileno, ótimo com pizza.", preco: 69.9, foto: "demo-pizzaria/img/vinho.webp", emoji: "🍷" },
+        { nome: "Cerveja artesanal", desc: "Garrafa 500 ml. Lager ou IPA de cervejaria da região.", preco: 19.9, foto: "demo-pizzaria/img/cerveja.webp", emoji: "🍺", opcoes: [
+          { titulo: "Estilo", min: 1, max: 1, itens: [{ nome: "Lager" }, { nome: "IPA", preco: 3 }] }
+        ]},
+        { nome: "Suco natural de laranja", desc: "500 ml, espremido na hora.", preco: 12.9, foto: "demo-pizzaria/img/suco.webp", emoji: "🍊" },
+        { nome: "Soda italiana", desc: "400 ml. Morango, maçã verde ou frutas vermelhas.", preco: 14.9, foto: "demo-pizzaria/img/soda-italiana.webp", emoji: "🍹" }
+      ]}
+    ]
+  };
+})();
+
+// EXEMPLO ILUSTRATIVO: estabelecimento fictício, fotos de banco de imagens (Unsplash) e preços de referência.
+(function () {
+  DEMOS["adega"] = {
+    demo: true,
+    nome: "Adega Noite Gelada",
+    slogan: "Cerveja trincando, drinks na hora e entrega até as 2h",
+    url: "",
+    logo: "demo-adega/img/logo.svg", banner: "demo-adega/img/capa.webp",
+    emoji: "🍾", emoji2: "🧊",
+    tema: { primaria: "#F5B700", secundaria: "#7B2CBF", fundo: "#121016", superficie: "#1D1A23", texto: "#F4F1F8", textoSuave: "#A39CAE", borda: "rgba(255,255,255,0.10)", fonteTitulo: "Oswald", fonteTexto: "Manrope" },
+    whatsapp: "5511900000000",
+    telefone: "(11) 90000-0000",
+    instagram: "@noitegelada",
+    endereco: "Jardim Briquet, Itapevi - SP",
+    aviso: "🔞 Venda proibida para menores de 18 anos. O documento pode ser pedido na entrega.",
+    horarios: [{ dias: [0, 1, 2, 3, 4, 5, 6], abre: "10:00", fecha: "02:00" }],
+    entrega: { taxa: 6, pedidoMinimo: 35, gratisAcima: 150, tempo: "20-35 min", tempoRetirada: "10 min", retirada: true },
+    pagamentos: ["Pix", "Cartão na entrega", "Dinheiro"],
+    assinatura: "Beba com moderação · Se beber, não dirija · Exemplo ilustrativo",
+    categorias: [
+      { nome: "Combos", itens: [
+        { nome: "Balde Resenha", desc: "6 long necks no balde com gelo. Escolha a cerveja.", preco: 64.9, precoAntigo: 74, foto: "demo-adega/img/balde-resenha.webp", emoji: "🍻", tags: ["promo", "combo"], opcoes: [
+          { titulo: "Cerveja", min: 1, max: 1, itens: [{ nome: "Pilsen" }, { nome: "Puro malte", preco: 8 }, { nome: "Artesanal IPA", preco: 24 }] }
+        ]},
+        { nome: "Combo Whisky + Energético", desc: "Whisky 8 anos 1 L, 4 energéticos 473 ml e gelo de coco.", preco: 179.9, foto: "demo-adega/img/combo-whisky.webp", emoji: "🥃", tags: ["mais-vendido", "combo"], opcoes: [
+          { titulo: "Sabor do energético", min: 1, max: 1, itens: [{ nome: "Tradicional" }, { nome: "Tropical" }, { nome: "Melancia" }, { nome: "Sem açúcar" }] }
+        ]},
+        { nome: "Combo Gin Tônica", desc: "Gin 750 ml, 4 tônicas, especiarias e limão-siciliano.", preco: 139.9, foto: "demo-adega/img/combo-gin.webp", emoji: "🍸", tags: ["combo"] }
+      ]},
+      { nome: "Cervejas", aviso: "Todas trincando. Gelo e carvão: consulte pelo WhatsApp.", itens: [
+        { nome: "Puro malte long neck", desc: "355 ml. A mais pedida para a resenha.", preco: 9.9, foto: "demo-adega/img/puro-malte.webp", emoji: "🍺", tags: ["gelada", "mais-vendido"] },
+        { nome: "Chopp pilsen growler", desc: "1 litro de chopp tirado na hora, no growler de vidro.", preco: 24.9, foto: "demo-adega/img/pilsen.webp", emoji: "🍺", tags: ["gelada"] },
+        { nome: "IPA artesanal", desc: "Garrafa 500 ml. Amargor médio e notas cítricas.", preco: 21.9, foto: "demo-adega/img/artesanais.webp", emoji: "🍺", tags: ["gelada"] },
+        { nome: "Stout artesanal", desc: "Garrafa 500 ml. Encorpada, com notas de café e chocolate.", preco: 22.9, foto: "demo-adega/img/stout.webp", emoji: "🍺" },
+        { nome: "Kit degustação", desc: "4 estilos artesanais de 355 ml para provar.", preco: 64.9, foto: "demo-adega/img/degustacao.webp", emoji: "🍻", tags: ["novo"] }
+      ]},
+      { nome: "Drinks", aviso: "Feitos na hora, copo de 500 ml com tampa.", itens: [
+        { nome: "Caipirinha", desc: "Fruta amassada na hora, açúcar ou adoçante e muito gelo.", preco: 22.9, foto: "demo-adega/img/caipirinha.webp", emoji: "🍹", tags: ["mais-vendido"], opcoes: [
+          { titulo: "Base", min: 1, max: 1, itens: [{ nome: "Cachaça" }, { nome: "Vodka", preco: 4 }, { nome: "Saquê", preco: 6 }] },
+          { titulo: "Fruta", min: 1, max: 1, itens: [{ nome: "Limão" }, { nome: "Morango", preco: 2 }, { nome: "Maracujá", preco: 2 }, { nome: "Kiwi", preco: 3 }] }
+        ], dicaObs: "Ex.: com adoçante, pouco gelo" },
+        { nome: "Aperol Spritz", desc: "Aperol, espumante, água com gás e rodela de laranja.", preco: 34.9, foto: "demo-adega/img/spritz.webp", emoji: "🍊" },
+        { nome: "Mojito", desc: "Rum, hortelã, limão, açúcar e água com gás.", preco: 28.9, foto: "demo-adega/img/mojito.webp", emoji: "🌿" },
+        { nome: "Drink Tropical", desc: "Vodka, maracujá, laranja e xarope de baunilha.", preco: 26.9, foto: "demo-adega/img/tropical.webp", emoji: "🍸", tags: ["novo"] },
+        { nome: "Old Fashioned", desc: "Bourbon, açúcar, angostura e casca de laranja.", preco: 36.9, foto: "demo-adega/img/old-fashioned.webp", emoji: "🥃" },
+        { nome: "Dry Martini", desc: "Gin, vermute seco e azeitonas.", preco: 34.9, foto: "demo-adega/img/dry-martini.webp", emoji: "🍸" }
+      ]},
+      { nome: "Vinhos", itens: [
+        { nome: "Malbec argentino", desc: "Garrafa 750 ml. Tinto seco, frutado e macio.", preco: 79.9, foto: "demo-adega/img/tinto.webp", emoji: "🍷" },
+        { nome: "Sauvignon Blanc chileno", desc: "Garrafa 750 ml. Branco seco e refrescante.", preco: 69.9, foto: "demo-adega/img/branco.webp", emoji: "🥂" }
+      ]},
+      { nome: "Petiscos", sugerir: true, itens: [
+        { nome: "Asinhas barbecue", desc: "12 asinhas assadas com molho barbecue defumado.", preco: 39.9, foto: "demo-adega/img/asinhas.webp", emoji: "🍗", tags: ["serve-2"] },
+        { nome: "Batata frita", desc: "400 g, sequinha, com sal e alecrim.", preco: 24.9, foto: "demo-adega/img/fritas.webp", emoji: "🍟" },
+        { nome: "Costelinha barbecue", desc: "500 g de costela suína assada lentamente.", preco: 59.9, foto: "demo-adega/img/costelinha.webp", emoji: "🍖", tags: ["serve-2"] }
+      ]},
+      { nome: "Sem álcool", sugerir: true, itens: [
+        { nome: "Suco de laranja", desc: "500 ml, natural.", preco: 11.9, foto: "demo-adega/img/suco.webp", emoji: "🍊" },
+        { nome: "Limonada suíça", desc: "500 ml. Limão batido com leite condensado.", preco: 13.9, foto: "demo-adega/img/limonada.webp", emoji: "🍋" }
+      ]}
+    ]
+  };
+})();
+
+// EXEMPLO ILUSTRATIVO: estabelecimento fictício, fotos de banco de imagens (Unsplash) e preços de referência.
+(function () {
+  DEMOS["doceria"] = {
+    demo: true,
+    nome: "Doce Ateliê",
+    slogan: "Confeitaria artesanal, açaí e cafés especiais",
+    url: "",
+    logo: "demo-doceria/img/logo.svg", banner: "demo-doceria/img/capa.webp",
+    emoji: "🧁", emoji2: "🍓",
+    tema: { primaria: "#C2185B", secundaria: "#F8BBD0", fundo: "#FFF5F8", superficie: "#FFFFFF", texto: "#3B1F2B", textoSuave: "#8A6B78", fonteTitulo: "Playfair Display", fonteTexto: "Manrope" },
+    whatsapp: "5511900000000",
+    telefone: "(11) 90000-0000",
+    instagram: "@doceatelie",
+    endereco: "Centro, Itapevi - SP",
+    horarios: [{ dias: [1, 2, 3, 4, 5, 6], abre: "09:00", fecha: "20:00" }, { dias: [0], abre: "13:00", fecha: "19:00" }],
+    entrega: { taxa: 6, pedidoMinimo: 25, gratisAcima: 100, tempo: "30-50 min", tempoRetirada: "15 min", retirada: true },
+    pagamentos: ["Pix", "Cartão", "Dinheiro"],
+    assinatura: "Cardápio digital · exemplo ilustrativo",
+    dicaObs: "Ex.: sem granulado, embalar para presente",
+    categorias: [
+      { nome: "Queridinhos", itens: [
+        { nome: "Caixa de brigadeiros gourmet", desc: "Feitos com chocolate belga. Escolha a caixa e até 3 sabores.", preco: 27, foto: "demo-doceria/img/brigadeiros.webp", emoji: "🍫", tags: ["mais-vendido"], opcoes: [
+          { titulo: "Caixa", min: 1, max: 1, itens: [{ nome: "6 unidades" }, { nome: "12 unidades", preco: 24 }, { nome: "25 unidades", preco: 78 }] },
+          { titulo: "Sabores", min: 1, max: 3, itens: [{ nome: "Tradicional" }, { nome: "Ninho" }, { nome: "Pistache" }, { nome: "Churros" }, { nome: "Maracujá" }, { nome: "Oreo" }] }
+        ]},
+        { nome: "Bolo de pote Ninho com morango", desc: "250 ml. Massa fofinha, creme de leite Ninho e morangos frescos.", preco: 17.9, foto: "demo-doceria/img/bolo-de-pote.webp", emoji: "🍓", tags: ["mais-vendido"] },
+        { nome: "Brigadeiro de colher", desc: "Pote de 200 g, cremoso, com granulado belga.", preco: 19.9, foto: "demo-doceria/img/brigadeiro-colher.webp", emoji: "🥄", tags: ["novo"] }
+      ]},
+      { nome: "Bolos e fatias", aviso: "Bolos inteiros sob encomenda, com 48 h de antecedência.", itens: [
+        { nome: "Fatia Red Velvet", desc: "Massa aveludada e cobertura de cream cheese.", preco: 19.9, foto: "demo-doceria/img/red-velvet.webp", emoji: "🍰" },
+        { nome: "Fatia de morango com chantilly", desc: "Pão de ló, creme de baunilha e morangos.", preco: 18.9, foto: "demo-doceria/img/fatia-morango.webp", emoji: "🍰" },
+        { nome: "Fatia de mousse de chocolate", desc: "Base de brownie e mousse de chocolate meio amargo.", preco: 18.9, foto: "demo-doceria/img/mousse.webp", emoji: "🍫" },
+        { nome: "Fatia Floresta Negra", desc: "Chocolate, chantilly e cerejas ao kirsch.", preco: 19.9, foto: "demo-doceria/img/floresta-negra.webp", emoji: "🍒" },
+        { nome: "Bolo trufado de chocolate", desc: "Inteiro, com recheio e cobertura de trufa.", preco: 129, foto: "demo-doceria/img/bolo-chocolate.webp", emoji: "🎂", tags: ["encomenda"], opcoes: [
+          { titulo: "Tamanho", min: 1, max: 1, itens: [{ nome: "1 kg", desc: "Serve 10 pessoas" }, { nome: "2 kg", desc: "Serve 20 pessoas", preco: 110 }] }
+        ], dicaObs: "Data e horário de retirada, frase no topo..." },
+        { nome: "Naked cake de frutas vermelhas", desc: "1,5 kg. Massa de baunilha, creme e frutas frescas.", preco: 189, foto: "demo-doceria/img/naked-cake.webp", emoji: "🎂", tags: ["encomenda"], dicaObs: "Data e horário de retirada" }
+      ]},
+      { nome: "Açaí e gelados", itens: [
+        { nome: "Açaí na tigela", desc: "Açaí cremoso com até 4 acompanhamentos grátis.", preco: 18.9, foto: "demo-doceria/img/acai.webp", emoji: "🍇", tags: ["mais-vendido"], opcoes: [
+          { titulo: "Tamanho", min: 1, max: 1, itens: [{ nome: "300 ml" }, { nome: "500 ml", preco: 7 }, { nome: "700 ml", preco: 13 }] },
+          { titulo: "Acompanhamentos grátis", max: 4, itens: [{ nome: "Granola" }, { nome: "Banana" }, { nome: "Leite em pó" }, { nome: "Paçoca" }, { nome: "Leite condensado" }, { nome: "Confete" }] },
+          { titulo: "Adicionais", max: 5, itens: [{ nome: "Nutella", preco: 6 }, { nome: "Morango", preco: 4 }, { nome: "Kiwi", preco: 4 }, { nome: "Leite Ninho", preco: 3 }, { nome: "Bis picado", preco: 3 }] }
+        ], dicaObs: "Ex.: granola separada, pouco leite condensado" },
+        { nome: "Sundae de brownie", desc: "400 ml. Sorvete, pedaços de brownie, chantilly e calda de chocolate.", preco: 24.9, foto: "demo-doceria/img/sundae.webp", emoji: "🍨" },
+        { nome: "Milkshake de Nutella", desc: "400 ml, com chantilly e granulado.", preco: 24.9, foto: "demo-doceria/img/shake.webp", emoji: "🥤" }
+      ]},
+      { nome: "Docinhos", sugerir: true, itens: [
+        { nome: "Cupcake Red Velvet", desc: "Com frosting de cream cheese.", preco: 12.9, foto: "demo-doceria/img/cupcake-red.webp", emoji: "🧁" },
+        { nome: "Cupcake de Oreo", desc: "Massa de chocolate e buttercream de Oreo.", preco: 12.9, foto: "demo-doceria/img/cupcake-oreo.webp", emoji: "🧁" },
+        { nome: "Cookie com gotas de chocolate", desc: "Grande, crocante por fora e macio por dentro.", preco: 10.9, foto: "demo-doceria/img/cookies.webp", emoji: "🍪" },
+        { nome: "Brownie", desc: "Chocolate meio amargo, casquinha crocante.", preco: 11.9, foto: "demo-doceria/img/brownie.webp", emoji: "🍫" },
+        { nome: "Croissant amanteigado", desc: "Massa folhada feita na casa, saída do forno.", preco: 9.9, foto: "demo-doceria/img/croissant.webp", emoji: "🥐" }
+      ]},
+      { nome: "Cafés", sugerir: true, itens: [
+        { nome: "Cappuccino", desc: "300 ml, com canela e chocolate.", preco: 13.9, foto: "demo-doceria/img/cappuccino.webp", emoji: "☕" },
+        { nome: "Café latte", desc: "300 ml. Espresso de grãos especiais e leite vaporizado.", preco: 12.9, foto: "demo-doceria/img/latte.webp", emoji: "☕", opcoes: [
+          { titulo: "Leite", min: 1, max: 1, itens: [{ nome: "Integral" }, { nome: "Sem lactose", preco: 2 }, { nome: "Vegetal (aveia)", preco: 3 }] }
+        ]},
+        { nome: "Mocha com chantilly", desc: "300 ml. Espresso, chocolate, leite e chantilly.", preco: 16.9, foto: "demo-doceria/img/mocha.webp", emoji: "☕" }
+      ]}
+    ]
+  };
+})();
+
+(function () {
+  var primeiro = document.querySelector("[data-demo]").dataset.demo;
+  var atual = (location.hash || "").slice(1);
+  if (!DEMOS[atual]) atual = primeiro;
+  window.CARDAPIO = DEMOS[atual];
+  function marcar() {
+    document.querySelectorAll("[data-demo]").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.dataset.demo === atual);
+      if (b.dataset.demo === atual) b.parentElement.scrollLeft = b.offsetLeft - 16;
+    });
+  }
+  marcar();
+  function trocar(k) {
+    if (!DEMOS[k] || k === atual) return;
+    atual = k; window.CARDAPIO = DEMOS[atual]; marcar();
+    try { history.replaceState(null, "", "#" + atual); } catch (err) {}
+    window.CardapioDigital.iniciar(); window.scrollTo(0, 0);
+  }
+  document.querySelector(".vitrine-botoes").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-demo]"); if (b) trocar(b.dataset.demo);
+  });
+  window.addEventListener("hashchange", function () { trocar(location.hash.slice(1)); });
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script>
+/* Cardápio Digital — modelo-base
+   Lê window.CARDAPIO (definido no dados.js de cada cliente) e monta a página.
+   Não é preciso editar este arquivo para criar um novo cardápio. */
+(function () {
+  "use strict";
+
+  const ICONES = {
+    whatsapp: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>',
+    instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
+    mapa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+    telefone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>',
+    compartilhar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>',
+    qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>',
+    busca: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+    mais: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    sacola: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+    relogio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
+  };
+
+  const ROTULOS = {
+    "mais-vendido": "Mais vendido", promo: "Promoção", novo: "Novo", vegano: "Vegano", vegetariano: "Vegetariano",
+    picante: "Picante", combo: "Combo", gelada: "Gelada", destaque: "Destaque", "sem-gluten": "Sem glúten",
+    "serve-2": "Serve 2", "serve-4": "Serve 4", encomenda: "Sob encomenda"
+  };
+  const DIAS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+  const DIAS_LONGOS = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+
+  function iniciar() {
+  const D = window.CARDAPIO;
+  if (!D) { document.getElementById("app").innerHTML = '<p style="padding:24px">Arquivo dados.js não encontrado.</p>'; return; }
+
+  // um #app novo a cada início, para poder trocar de cardápio sem recarregar
+  const antigo = document.getElementById("app");
+  const raiz = antigo.cloneNode(false);
+  antigo.replaceWith(raiz);
+  document.body.style.overflow = "";
+
+  const E = D.entrega || {};
+  const bairros = Array.isArray(E.bairros) && E.bairros.length ? E.bairros : null;
+  const fazEntrega = E.taxa != null || !!bairros;
+  const fazRetirada = E.retirada !== false || !fazEntrega;
+  const itens = [];
+  const porId = {};
+  let sacola = []; // [{ id, qtd, esc: [[grupo, opção], ...], obs }]
+  let modo = fazEntrega ? "entrega" : "retirada";
+  const cliente = { nome: "", end: "", bairro: "", pag: "", troco: "", obs: "" };
+  let rascunho = null; // item sendo montado no painel de produto
+  let focoAnterior = null;
+
+  // ---------- utilidades ----------
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const real = (v) => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const $ = (sel, el) => (el || document).querySelector(sel);
+  const $$ = (sel, el) => Array.from((el || document).querySelectorAll(sel));
+  const semAcento = (s) => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const iniciais = (n) => n.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0]).join("").toUpperCase();
+  const linkWhats = (texto) => "https://wa.me/" + String(D.whatsapp || "").replace(/\D/g, "") + (texto ? "?text=" + encodeURIComponent(texto) : "");
+  const chaveLocal = "cardapio:" + semAcento(D.nome).replace(/[^a-z0-9]+/g, "-");
+
+  function toast(msg) {
+    let t = $(".toast");
+    if (!t) { t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add("visivel");
+    clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove("visivel"), 2200);
+  }
+
+  // ---------- tema ----------
+  // texto legível sobre a cor principal (branco em cores escuras, quase preto em cores claras como amarelo)
+  function corSobre(hex) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || "").trim());
+    if (!m) return "#ffffff";
+    const n = parseInt(m[1], 16);
+    const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+    const L = 0.2126 * lin(n >> 16) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+    return L > 0.4 ? "#1a1a1a" : "#ffffff";
+  }
+  function aplicarTema() {
+    const t = D.tema || {};
+    const r = document.documentElement.style;
+    const mapa = { primaria: "--primaria", secundaria: "--secundaria", fundo: "--fundo", superficie: "--superficie", texto: "--texto", textoSuave: "--texto-suave", borda: "--borda" };
+    Object.keys(mapa).forEach((k) => (t[k] ? r.setProperty(mapa[k], t[k]) : r.removeProperty(mapa[k])));
+    r.setProperty("--sobre-primaria", t.textoSobrePrimaria || corSobre(t.primaria));
+    t.fonteTitulo ? r.setProperty("--fonte-titulo", `"${t.fonteTitulo}", system-ui, sans-serif`) : r.removeProperty("--fonte-titulo");
+    t.fonteTexto ? r.setProperty("--fonte-texto", `"${t.fonteTexto}", system-ui, sans-serif`) : r.removeProperty("--fonte-texto");
+    const fontes = [t.fonteTitulo, t.fonteTexto || "Manrope"].filter(Boolean);
+    const link = document.getElementById("fontes") || document.createElement("link");
+    link.id = "fontes"; link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?" + fontes.map((f) => "family=" + f.replace(/ /g, "+") + ":wght@400;500;600;700;800").join("&") + "&display=swap";
+    document.head.appendChild(link);
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.appendChild(meta); }
+    meta.content = t.fundo || t.primaria || "#ffffff";
+    document.title = D.nome + " · Cardápio e pedidos";
+    const desc = document.querySelector('meta[name="description"]');
+    if (desc && D.slogan) desc.content = D.nome + ": " + D.slogan + ". Veja o cardápio e peça pelo WhatsApp.";
+  }
+
+  // ---------- horário de funcionamento ----------
+  const minutos = (h) => { const [a, b] = h.split(":").map(Number); return a * 60 + b; };
+  const horarios = D.horarios || [];
+  function turnoAtual(agora) {
+    const d = agora.getDay(), m = agora.getHours() * 60 + agora.getMinutes();
+    return horarios.find((h) => {
+      const abre = minutos(h.abre), fecha = minutos(h.fecha);
+      if (fecha > abre) return h.dias.includes(d) && m >= abre && m < fecha;
+      // vira a madrugada (ex.: 18:00 às 02:00)
+      return (h.dias.includes(d) && m >= abre) || (h.dias.includes((d + 6) % 7) && m < fecha);
+    });
+  }
+  function proximaAbertura(agora) {
+    const d = agora.getDay(), m = agora.getHours() * 60 + agora.getMinutes();
+    for (let k = 0; k <= 7; k++) {
+      const dia = (d + k) % 7;
+      const turnos = horarios.filter((h) => h.dias.includes(dia)).sort((a, b) => minutos(a.abre) - minutos(b.abre));
+      const t = turnos.find((h) => k > 0 || minutos(h.abre) > m);
+      if (t) return (k === 0 ? "hoje" : k === 1 ? "amanhã" : DIAS_LONGOS[dia]) + " às " + t.abre;
+    }
+    return "";
+  }
+  function situacao() {
+    const agora = new Date(), t = turnoAtual(agora);
+    if (t) return { aberto: true, texto: "Aberto agora", detalhe: "até " + t.fecha };
+    const p = proximaAbertura(agora);
+    return { aberto: false, texto: "Fechado agora", detalhe: p ? "abre " + p : "" };
+  }
+  function diasTexto(dias) {
+    if (dias.length === 7) return "Todos os dias";
+    const ordem = [1, 2, 3, 4, 5, 6, 0].filter((d) => dias.includes(d));
+    const grupos = [];
+    ordem.forEach((d) => {
+      const g = grupos[grupos.length - 1];
+      if (g && (g[g.length - 1] + 1) % 7 === d && g[g.length - 1] !== 0) g.push(d); else grupos.push([d]);
+    });
+    return grupos.map((g) => (g.length >= 3 ? DIAS[g[0]] + " a " + DIAS[g[g.length - 1]] : g.map((d) => DIAS[d]).join(", "))).join(", ");
+  }
+
+  // ---------- preços e sacola ----------
+  const temOpcoes = (i) => Array.isArray(i.opcoes) && i.opcoes.length > 0;
+  const opcao = (i, g, o) => i.opcoes[g].itens[o];
+  const aPartir = (i) => i.aPartirDe || (temOpcoes(i) && i.opcoes.some((g) => (g.min || 0) > 0 && g.itens.some((o) => o.preco)));
+  const precoUnit = (l) => { const i = porId[l.id]; return i.preco + l.esc.reduce((s, [g, o]) => s + (opcao(i, g, o).preco || 0), 0); };
+  const chave = (l) => l.id + "|" + l.esc.map((x) => x.join(".")).join(",") + "|" + (l.obs || "");
+  const quantidade = () => sacola.reduce((n, l) => n + l.qtd, 0);
+  const qtdItem = (id) => sacola.reduce((n, l) => n + (l.id === id ? l.qtd : 0), 0);
+  const subtotal = () => sacola.reduce((s, l) => s + l.qtd * precoUnit(l), 0);
+  const linhaSimples = (id) => sacola.find((l) => l.id === id && !l.esc.length && !l.obs);
+
+  function escolhasTexto(l) {
+    const i = porId[l.id], porGrupo = {};
+    l.esc.forEach(([g, o]) => { (porGrupo[g] = porGrupo[g] || []).push(opcao(i, g, o).nome); });
+    return Object.keys(porGrupo).map((g) => i.opcoes[g].titulo + ": " + porGrupo[g].join(", "));
+  }
+
+  // taxa de entrega: null = ainda falta escolher o bairro
+  function taxa() {
+    if (modo !== "entrega") return 0;
+    if (E.gratisAcima && subtotal() >= E.gratisAcima) return 0;
+    if (bairros) { const b = bairros.find((x) => x.nome === cliente.bairro); return b ? b.taxa || 0 : null; }
+    return E.taxa || 0;
+  }
+
+  function carregar() {
+    if (D.demo) return;
+    try {
+      const s = JSON.parse(localStorage.getItem(chaveLocal) || "null");
+      if (!s) return;
+      Object.assign(cliente, s.cliente || {});
+      if (s.modo === "retirada" ? fazRetirada : fazEntrega) modo = s.modo || modo;
+      // só recupera itens que continuam existindo com o mesmo nome e as mesmas opções
+      sacola = (s.sacola || []).filter((l) => {
+        const i = porId[l.id];
+        return i && i.nome === l.nome && !i.esgotado && l.qtd > 0 && Array.isArray(l.esc) &&
+          l.esc.every(([g, o]) => i.opcoes && i.opcoes[g] && i.opcoes[g].itens[o]);
+      }).map((l) => ({ id: l.id, qtd: l.qtd, esc: l.esc, obs: l.obs || "" }));
+    } catch (err) {}
+  }
+  function salvar() {
+    if (D.demo) return;
+    try {
+      localStorage.setItem(chaveLocal, JSON.stringify({
+        modo, cliente: { nome: cliente.nome, end: cliente.end, bairro: cliente.bairro, pag: cliente.pag },
+        sacola: sacola.map((l) => ({ id: l.id, nome: porId[l.id].nome, qtd: l.qtd, esc: l.esc, obs: l.obs }))
+      }));
+    } catch (err) {}
+  }
+
+  // ---------- peças visuais ----------
+  function foto(item, classe) {
+    const selo = (item.tags || []).find((t) => t === "promo" || t === "mais-vendido");
+    const conteudo = item.foto
+      ? `<img src="${esc(item.foto)}" alt="${esc(item.nome)}" loading="lazy" decoding="async" data-emoji="${esc(item.emoji || D.emoji || "🍽️")}">`
+      : `<div class="emoji"><span>${item.emoji || D.emoji || "🍽️"}</span></div>`;
+    return `<div class="foto ${classe || ""}">${selo && !classe ?`<div class="tags"><span class="tag ${selo}">${ROTULOS[selo]}</span></div>` : ""}${conteudo}</div>`;
+  }
+  function tagsTexto(item, todas) {
+    const t = (item.tags || []).filter((x) => todas || (x !== "promo" && x !== "mais-vendido" && x !== "destaque"));
+    return t.length ? `<div class="tags">${t.map((x) => `<span class="tag ${x}">${ROTULOS[x] || esc(x)}</span>`).join("")}</div>` : "";
+  }
+  function preco(item) {
+    return `<span class="preco">${item.precoAntigo ? `<s>${real(item.precoAntigo)}</s>` : ""}${aPartir(item) ? "<small>a partir de</small>" : ""}${real(item.preco)}</span>`;
+  }
+  function controle(i) {
+    if (i.esgotado) return `<div data-ctrl="${i.id}"><span class="rotulo-esgotado">Esgotado</span></div>`;
+    const l = !temOpcoes(i) && linhaSimples(i.id);
+    if (l) return `<div class="qtd" data-ctrl="${i.id}"><button type="button" data-menos="${i.id}" aria-label="Remover um ${esc(i.nome)}">−</button><span aria-live="polite">${l.qtd}</span><button type="button" data-mais="${i.id}" aria-label="Adicionar mais um ${esc(i.nome)}">+</button></div>`;
+    const n = qtdItem(i.id);
+    return `<div data-ctrl="${i.id}"><button type="button" class="add" ${temOpcoes(i) ? "data-abrir" : "data-mais"}="${i.id}" aria-label="Adicionar ${esc(i.nome)}">${ICONES.mais}${n ? `<span class="badge">${n}</span>` : ""}</button></div>`;
+  }
+  // nos demos os contatos não abrem nada: o número e os perfis são fictícios
+  function contato(href, icone, rotulo, externo) {
+    if (D.demo) return `<button type="button" class="contato" data-acao="demo-contato" data-rotulo="${rotulo}">${icone}${rotulo}</button>`;
+    return `<a class="contato" href="${href}"${externo ? ' target="_blank" rel="noopener"' : ""}>${icone}${rotulo}</a>`;
+  }
+
+  // ---------- montagem ----------
+  function montar() {
+    D.categorias.forEach((c, ci) => c.itens.forEach((it, ii) => { it.id = ci + "-" + ii; it.categoria = c.nome; itens.push(it); porId[it.id] = it; }));
+    const destaques = itens.filter((i) => !i.esgotado && (i.tags || []).some((t) => t === "mais-vendido" || t === "promo" || t === "destaque"));
+    const s = situacao();
+    const taxas = bairros ? bairros.map((b) => b.taxa || 0) : [];
+    const taxaTexto = bairros ? (Math.min.apply(null, taxas) ? "a partir de " + real(Math.min.apply(null, taxas)) : "grátis em alguns bairros") : E.taxa ? real(E.taxa) : "grátis";
+
+    raiz.innerHTML = `
+      ${D.demo ? '<div class="faixa-demo">Cardápio de exemplo · empresa, fotos e preços ilustrativos</div>' : ""}
+      <header class="capa">
+        ${D.banner ? `<img class="capa-img" src="${esc(D.banner)}" alt="" fetchpriority="high">` : `<div class="capa-arte"><span>${D.emoji || "🍽️"}</span><span>${D.emoji2 || D.emoji || ""}</span></div>`}
+        <div class="capa-acoes">
+          <button type="button" class="btn-redondo" data-acao="qr" aria-label="QR Code do cardápio">${ICONES.qr}</button>
+          <button type="button" class="btn-redondo" data-acao="compartilhar" aria-label="Compartilhar cardápio">${ICONES.compartilhar}</button>
+        </div>
+      </header>
+      <section class="perfil">
+        <div class="logo">${D.logo ? `<img src="${esc(D.logo)}" alt="${esc(D.nome)}">` : esc(iniciais(D.nome))}</div>
+        <h1>${esc(D.nome)}</h1>
+        ${D.slogan ? `<p class="slogan">${esc(D.slogan)}</p>` : ""}
+        ${horarios.length ? `<span class="status ${s.aberto ? "aberto" : "fechado"}">${s.texto}${s.detalhe ? ` <span>· ${s.detalhe}</span>` : ""}</span>` : ""}
+        <div class="infos">
+          ${E.tempo ? `<span>${ICONES.relogio}<b>${esc(E.tempo)}</b></span>` : ""}
+          ${fazEntrega ? `<span>Entrega <b>${taxaTexto}</b></span>` : ""}
+          ${E.pedidoMinimo ? `<span>Mínimo <b>${real(E.pedidoMinimo)}</b></span>` : ""}
+          ${!fazEntrega && fazRetirada ? "<span><b>Retirada no local</b></span>" : ""}
+        </div>
+        ${E.gratisAcima ? `<p class="selo-frete">🛵 Entrega grátis em pedidos acima de ${real(E.gratisAcima)}</p>` : ""}
+        <div class="contatos">
+          ${D.whatsapp ? contato(linkWhats("Olá! Vim pelo cardápio digital."), ICONES.whatsapp, "WhatsApp", true) : ""}
+          ${D.instagram ? contato("https://instagram.com/" + esc(D.instagram.replace("@", "")), ICONES.instagram, "Instagram", true) : ""}
+          ${D.endereco ? contato("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(D.endereco), ICONES.mapa, "Como chegar", true) : ""}
+          ${D.telefone ? contato("tel:" + esc(D.telefone.replace(/\D/g, "")), ICONES.telefone, "Ligar") : ""}
+        </div>
+        ${D.aviso ? `<p class="aviso-loja">${esc(D.aviso)}</p>` : ""}
+      </section>
+
+      <nav class="barra" aria-label="Categorias">
+        <div class="busca">${ICONES.busca}<input type="search" placeholder="Buscar no cardápio" aria-label="Buscar no cardápio" enterkeyhint="search"></div>
+        <div class="chips">
+          ${destaques.length ? '<button type="button" class="chip ativo" data-ir="sec-destaques">Destaques</button>' : ""}
+          ${D.categorias.map((c, i) => `<button type="button" class="chip${!destaques.length && !i ? " ativo" : ""}" data-ir="sec-${i}">${esc(c.nome)}</button>`).join("")}
+        </div>
+      </nav>
+
+      <main>
+        ${destaques.length ? `
+        <section class="secao" id="sec-destaques">
+          <h2>Destaques da casa</h2>
+          <div class="destaques">
+            ${destaques.map((i) => `
+              <article class="destaque" data-abrir="${i.id}" tabindex="0" aria-label="${esc(i.nome)}, ${real(i.preco)}">
+                ${foto(i)}
+                <div class="corpo"><h3>${esc(i.nome)}</h3><p>${esc(i.desc)}</p>
+                  <div class="rodape">${preco(i)}${controle(i)}</div>
+                </div>
+              </article>`).join("")}
+          </div>
+        </section>` : ""}
+        ${D.categorias.map((c, ci) => `
+          <section class="secao" id="sec-${ci}" data-categoria>
+            <h2>${esc(c.nome)} <small>${c.itens.length} ${c.itens.length === 1 ? "item" : "itens"}</small></h2>
+            ${c.aviso ? `<p class="aviso-categoria">${esc(c.aviso)}</p>` : ""}
+            <div class="lista">
+              ${c.itens.map((i) => `
+                <article class="item${i.esgotado ? " esgotado" : ""}" data-abrir="${i.id}" tabindex="0" aria-label="${esc(i.nome)}, ${real(i.preco)}" data-busca="${esc(semAcento(i.nome + " " + (i.desc || "") + " " + c.nome))}">
+                  <div class="corpo">
+                    ${tagsTexto(i)}
+                    <h3>${esc(i.nome)}</h3>
+                    <p>${esc(i.desc)}</p>
+                    <div class="rodape">${preco(i)}${controle(i)}</div>
+                  </div>
+                  ${foto(i)}
+                </article>`).join("")}
+            </div>
+          </section>`).join("")}
+        <p class="vazio" hidden>Nenhum item encontrado. Tente outra palavra.</p>
+      </main>
+
+      <footer class="rodape-pagina">
+        <b>${esc(D.nome)}</b>
+        ${D.endereco ? `<p>${esc(D.endereco)}</p>` : ""}
+        ${horarios.length ? `<p>${horarios.map((h) => `${diasTexto(h.dias)}: ${h.abre} às ${h.fecha}`).join("<br>")}</p>` : ""}
+        ${D.pagamentos ? `<p>Aceitamos ${D.pagamentos.map(esc).join(" · ")}</p>` : ""}
+        <div class="assinatura">${esc(D.assinatura || "Cardápio digital")}</div>
+        ${D.credito && D.credito.texto ? `<a class="credito" href="${esc(D.credito.link || "#")}" target="_blank" rel="noopener">${esc(D.credito.texto)}</a>` : ""}
+      </footer>
+
+      <button type="button" class="sacola-barra" data-acao="sacola" aria-label="Ver sacola"><span class="esq">${ICONES.sacola}<span class="contador">0</span>Ver sacola</span><span class="soma">R$ 0,00</span></button>
+      ${D.whatsapp ? (D.demo
+        ? `<button type="button" class="wa-flutuante" data-acao="demo-contato" data-rotulo="WhatsApp" aria-label="Falar no WhatsApp">${ICONES.whatsapp}</button>`
+        : `<a class="wa-flutuante" href="${linkWhats("Olá! Vim pelo cardápio digital.")}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">${ICONES.whatsapp}</a>`) : ""}
+      <div class="fundo-escuro"></div>
+      <div class="painel" role="dialog" aria-modal="true" aria-label="Detalhes"></div>
+    `;
+  }
+
+  // ---------- atualização da sacola ----------
+  function atualizar() {
+    $$("[data-ctrl]", raiz).forEach((el) => (el.outerHTML = controle(porId[el.dataset.ctrl])));
+    const n = quantidade();
+    const barra = $(".sacola-barra", raiz);
+    barra.classList.toggle("visivel", n > 0);
+    const wa = $(".wa-flutuante", raiz); if (wa) wa.classList.toggle("oculto", n > 0);
+    $(".contador", barra).textContent = n;
+    $(".soma", barra).textContent = real(subtotal());
+    salvar();
+    const p = $(".painel", raiz);
+    if (p.dataset.tipo === "sacola") n ? abrirSacola() : fecharPainel();
+  }
+  function adicionar(linha) {
+    const k = chave(linha), existente = sacola.find((l) => chave(l) === k);
+    existente ? (existente.qtd += linha.qtd) : sacola.push(linha);
+    if (navigator.vibrate) navigator.vibrate(12);
+    atualizar();
+  }
+  function alterarSimples(id, delta) {
+    const i = porId[id];
+    if (temOpcoes(i)) return abrirProduto(id);
+    const l = linhaSimples(id);
+    if (delta > 0) return adicionar({ id, qtd: 1, esc: [], obs: "" });
+    if (l) { l.qtd--; if (!l.qtd) sacola.splice(sacola.indexOf(l), 1); }
+    atualizar();
+  }
+  function alterarLinha(idx, delta) {
+    const l = sacola[idx]; if (!l) return;
+    l.qtd += delta;
+    if (l.qtd <= 0) sacola.splice(idx, 1);
+    if (delta > 0 && navigator.vibrate) navigator.vibrate(12);
+    atualizar();
+  }
+
+  // ---------- painéis ----------
+  function abrirPainel(html, tipo, rotulo) {
+    const p = $(".painel", raiz);
+    const jaAberto = p.classList.contains("aberto");
+    if (!jaAberto) focoAnterior = document.activeElement;
+    const rolagem = jaAberto && p.dataset.tipo === tipo ? p.scrollTop : 0;
+    p.innerHTML = `<div class="alca"></div><button type="button" class="fechar" data-acao="fechar" aria-label="Fechar">×</button>` + html;
+    p.dataset.tipo = tipo;
+    p.setAttribute("aria-label", rotulo || "Detalhes");
+    p.classList.add("aberto"); $(".fundo-escuro", raiz).classList.add("aberto");
+    p.scrollTop = rolagem;
+    document.body.style.overflow = "hidden";
+    if (!jaAberto) $(".fechar", p).focus({ preventScroll: true });
+  }
+  function fecharPainel() {
+    const p = $(".painel", raiz);
+    if (!p.classList.contains("aberto")) return;
+    p.classList.remove("aberto"); p.dataset.tipo = "";
+    $(".fundo-escuro", raiz).classList.remove("aberto"); document.body.style.overflow = "";
+    rascunho = null;
+    if (focoAnterior && document.contains(focoAnterior)) focoAnterior.focus({ preventScroll: true });
+  }
+
+  // produto: escolha de opções, observação e quantidade
+  function abrirProduto(id, voltarSacola) {
+    const i = porId[id];
+    rascunho = {
+      id, qtd: 1, obs: "", voltarSacola: !!voltarSacola,
+      sel: (i.opcoes || []).map((g) => {
+        if ((g.min || 0) >= 1 && (g.max || 1) === 1) { const o = g.itens.findIndex((x) => !x.esgotado); return o >= 0 ? [o] : []; }
+        return [];
+      })
+    };
+    const grupos = (i.opcoes || []).map((g, gi) => {
+      const min = g.min || 0, max = g.max || 1, unico = max === 1;
+      const regra = min >= 1 ? (unico ? "Obrigatório · escolha 1" : `Obrigatório · escolha de ${min} a ${max}`) : unico ? "Opcional · escolha 1" : `Opcional · até ${max}`;
+      return `<fieldset class="grupo" data-grupo="${gi}">
+        <legend><span>${esc(g.titulo)}</span><small>${regra}</small></legend>
+        ${g.itens.map((o, oi) => `<label class="opcao${o.esgotado ? " indisponivel" : ""}">
+          <input type="${unico ? "radio" : "checkbox"}" name="g${gi}" data-g="${gi}" data-o="${oi}"${rascunho.sel[gi].includes(oi) ? " checked" : ""}${o.esgotado ? " disabled" : ""}>
+          <span class="nome-opcao">${esc(o.nome)}${o.desc ? `<small>${esc(o.desc)}</small>` : ""}</span>
+          <span class="preco-opcao">${o.esgotado ? "Esgotado" : o.preco ? "+ " + real(o.preco) : ""}</span>
+        </label>`).join("")}
+      </fieldset>`;
+    }).join("");
+    abrirPainel(`
+      ${foto(i, "foto-grande")}
+      ${tagsTexto(i, true)}
+      <h2>${esc(i.nome)}</h2>
+      <p class="desc">${esc(i.desc)}</p>
+      ${i.detalhe ? `<p class="desc detalhe">${esc(i.detalhe)}</p>` : ""}
+      <div class="preco-produto">${preco(i)}</div>
+      ${grupos}
+      ${i.esgotado ? "" : `<div class="campo"><label for="f-obs-item">Alguma observação?</label><textarea id="f-obs-item" data-rascunho="obs" maxlength="140" placeholder="${esc(i.dicaObs || D.dicaObs || "Ex.: tirar algum ingrediente")}"></textarea></div>`}
+      <div class="painel-rodape">
+        ${i.esgotado ? '<button type="button" class="btn-principal tema" disabled>Indisponível no momento</button>' : `
+        <div class="qtd grande"><button type="button" data-rqtd="-1" aria-label="Diminuir quantidade">−</button><span class="rqtd">1</span><button type="button" data-rqtd="1" aria-label="Aumentar quantidade">+</button></div>
+        <button type="button" class="btn-principal tema" data-acao="confirmar-item">Adicionar <span class="rtotal"></span></button>`}
+      </div>
+    `, "produto", i.nome);
+    atualizarRascunho();
+  }
+  function atualizarRascunho() {
+    if (!rascunho) return;
+    const i = porId[rascunho.id], p = $(".painel", raiz);
+    const unit = i.preco + rascunho.sel.reduce((s, os, g) => s + os.reduce((t, o) => t + (opcao(i, g, o).preco || 0), 0), 0);
+    const tot = $(".rtotal", p); if (tot) tot.textContent = "· " + real(unit * rascunho.qtd);
+    const q = $(".rqtd", p); if (q) q.textContent = rascunho.qtd;
+    // desabilita as caixas quando o limite do grupo foi atingido
+    (i.opcoes || []).forEach((g, gi) => {
+      const max = g.max || 1; if (max === 1) return;
+      const cheio = rascunho.sel[gi].length >= max;
+      $$(`input[data-g="${gi}"]`, p).forEach((inp) => { inp.disabled = !!opcao(i, gi, +inp.dataset.o).esgotado || (cheio && !inp.checked); });
+    });
+  }
+  function confirmarItem() {
+    const i = porId[rascunho.id];
+    for (let gi = 0; gi < (i.opcoes || []).length; gi++) {
+      const g = i.opcoes[gi];
+      if (rascunho.sel[gi].length < (g.min || 0)) {
+        toast((g.min || 0) > 1 ? `Escolha pelo menos ${g.min} em "${g.titulo}"` : `Escolha uma opção em "${g.titulo}"`);
+        const el = $(`[data-grupo="${gi}"]`, raiz); el.classList.add("pendente"); el.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+    }
+    const esc_ = [];
+    rascunho.sel.forEach((os, g) => os.slice().sort((a, b) => a - b).forEach((o) => esc_.push([g, o])));
+    const obs = (($("#f-obs-item") || {}).value || "").trim();
+    const voltar = rascunho.voltarSacola;
+    adicionar({ id: i.id, qtd: rascunho.qtd, esc: esc_, obs });
+    rascunho = null;
+    voltar ? abrirSacola() : fecharPainel();
+    toast(`${i.nome} na sacola`);
+  }
+
+  function abrirSacola() {
+    const st = subtotal(), tx = taxa();
+    const s = situacao();
+    const faltaMinimo = modo === "entrega" && E.pedidoMinimo && st < E.pedidoMinimo ? E.pedidoMinimo - st : 0;
+    const faltaGratis = modo === "entrega" && E.gratisAcima && st < E.gratisAcima ? E.gratisAcima - st : 0;
+    const dinheiro = /dinheiro/i.test(cliente.pag);
+    if (D.pagamentos && !D.pagamentos.includes(cliente.pag)) cliente.pag = "";
+
+    const linhas = sacola.map((l, idx) => {
+      const i = porId[l.id];
+      const extras = escolhasTexto(l).concat(l.obs ? ["Obs.: " + l.obs] : []);
+      return `<div class="linha-sacola">
+        ${i.foto ? `<img src="${esc(i.foto)}" alt="" loading="lazy" data-emoji="${esc(i.emoji || "")}">` : `<span class="mini-emoji">${i.emoji || D.emoji || "🍽️"}</span>`}
+        <div class="nome">${esc(i.nome)}${extras.map((x) => `<small>${esc(x)}</small>`).join("")}<b>${real(precoUnit(l) * l.qtd)}</b></div>
+        <div class="qtd"><button type="button" data-lmenos="${idx}" aria-label="Remover um">${l.qtd === 1 ? "🗑" : "−"}</button><span>${l.qtd}</span><button type="button" data-lmais="${idx}" aria-label="Adicionar mais um">+</button></div>
+      </div>`;
+    }).join("");
+
+    // sugestões para aumentar o pedido: categorias marcadas com sugerir: true
+    const naSacola = new Set(sacola.map((l) => l.id));
+    const sugestoes = itens.filter((i) => !i.esgotado && !naSacola.has(i.id) && D.categorias.some((c) => c.sugerir && c.nome === i.categoria)).slice(0, 8);
+
+    abrirPainel(`
+      <h2>Sua sacola</h2>
+      ${!s.aberto && horarios.length ? `<p class="nota">Estamos fechados agora${s.detalhe ? " (" + s.detalhe + ")" : ""}. Você pode enviar o pedido e respondemos assim que abrirmos.</p>` : ""}
+      ${linhas}
+      ${sugestoes.length ? `<div class="sugestoes"><p>Peça também</p><div class="sugestoes-lista">${sugestoes.map((i) => `
+        <div class="sugestao">${foto(i, "mini")}<span>${esc(i.nome)}</span><b>${aPartir(i) ? "a partir de " : ""}${real(i.preco)}</b><button type="button" class="add" ${temOpcoes(i) ? "data-abrir" : "data-mais"}="${i.id}" aria-label="Adicionar ${esc(i.nome)}">${ICONES.mais}</button></div>`).join("")}
+      </div></div>` : ""}
+
+      ${fazEntrega && fazRetirada ? `
+      <div class="segmentado" role="group" aria-label="Como você quer receber">
+        <button type="button" data-modo="entrega" aria-pressed="${modo === "entrega"}" class="${modo === "entrega" ? "ativo" : ""}">🛵 Entrega</button>
+        <button type="button" data-modo="retirada" aria-pressed="${modo === "retirada"}" class="${modo === "retirada" ? "ativo" : ""}">🏪 Retirar no local</button>
+      </div>` : ""}
+      ${modo === "retirada" && D.endereco ? `<p class="nota suave">Retirada em: ${esc(D.endereco)}${E.tempoRetirada ? " · pronto em " + esc(E.tempoRetirada) : ""}</p>` : ""}
+
+      <div class="campo"><label for="f-nome">Seu nome</label><input id="f-nome" data-campo="nome" autocomplete="name" value="${esc(cliente.nome)}"></div>
+      ${modo === "entrega" && bairros ? `<div class="campo"><label for="f-bairro">Bairro</label><select id="f-bairro" data-campo="bairro"><option value="">Selecione o bairro</option>${bairros.map((b) => `<option value="${esc(b.nome)}"${b.nome === cliente.bairro ? " selected" : ""}>${esc(b.nome)} · ${b.taxa ? real(b.taxa) : "grátis"}</option>`).join("")}</select></div>` : ""}
+      ${modo === "entrega" ? `<div class="campo"><label for="f-end">Endereço de entrega</label><input id="f-end" data-campo="end" autocomplete="street-address" placeholder="Rua, número, complemento e referência" value="${esc(cliente.end)}"></div>` : ""}
+      ${D.pagamentos ? `<div class="campo"><span class="rotulo">Forma de pagamento</span><div class="escolhas" role="radiogroup" aria-label="Forma de pagamento">${D.pagamentos.map((p) => `<button type="button" role="radio" aria-checked="${p === cliente.pag}" data-pag="${esc(p)}" class="${p === cliente.pag ? "ativo" : ""}">${esc(p)}</button>`).join("")}</div></div>` : ""}
+      ${dinheiro ? `<div class="campo"><label for="f-troco">Troco para quanto?</label><input id="f-troco" data-campo="troco" inputmode="decimal" placeholder="Deixe em branco se não precisar" value="${esc(cliente.troco)}"></div>` : ""}
+      <div class="campo"><label for="f-obs">Observações do pedido</label><textarea id="f-obs" data-campo="obs" placeholder="Ex.: interfone quebrado, mandar sachês">${esc(cliente.obs)}</textarea></div>
+
+      <div class="totais">
+        <div><span>Subtotal</span><span>${real(st)}</span></div>
+        ${modo === "entrega" ? `<div><span>Taxa de entrega${bairros && cliente.bairro ? " · " + esc(cliente.bairro) : ""}</span><span>${tx == null ? "selecione o bairro" : tx ? real(tx) : "Grátis"}</span></div>` : ""}
+        <div class="total"><span>Total</span><span>${real(st + (tx || 0))}</span></div>
+      </div>
+      ${faltaGratis && !faltaMinimo ? `<p class="nota destaque-nota">Faltam ${real(faltaGratis)} para a entrega grátis</p>` : ""}
+      ${faltaMinimo ? `<p class="aviso">Faltam ${real(faltaMinimo)} para o pedido mínimo de entrega (${real(E.pedidoMinimo)}).</p>` : ""}
+      <div class="painel-rodape">
+        <button type="button" class="btn-principal" data-acao="enviar" ${faltaMinimo ? "disabled" : ""}>${ICONES.whatsapp} Enviar pedido pelo WhatsApp</button>
+      </div>
+      ${D.demo ? '<p class="centro rodape-demo">Exemplo: o número de WhatsApp é fictício. Você verá a mensagem pronta.</p>' : ""}
+    `, "sacola", "Sua sacola");
+  }
+
+  function mensagemPedido() {
+    const st = subtotal(), tx = taxa() || 0;
+    const l = [`*Novo pedido · ${D.nome}*`, ""];
+    sacola.forEach((x) => {
+      const i = porId[x.id];
+      l.push(`*${x.qtd}x ${i.nome}* · ${real(precoUnit(x) * x.qtd)}`);
+      escolhasTexto(x).forEach((t) => l.push("   " + t));
+      if (x.obs) l.push("   Obs.: " + x.obs);
+    });
+    l.push("", "Subtotal: " + real(st));
+    if (modo === "entrega") l.push("Entrega" + (bairros ? " (" + cliente.bairro + ")" : "") + ": " + (tx ? real(tx) : "grátis"));
+    l.push("*Total: " + real(st + tx) + "*", "");
+    l.push("*Nome:* " + cliente.nome.trim());
+    l.push(modo === "entrega" ? "*Entregar em:* " + cliente.end.trim() + (bairros ? " · " + cliente.bairro : "") : "*Retirada no local*");
+    if (cliente.pag) l.push("*Pagamento:* " + cliente.pag + (/dinheiro/i.test(cliente.pag) && cliente.troco.trim() ? " · troco para R$ " + cliente.troco.trim().replace(/^r\$\s*/i, "") : ""));
+    if (cliente.obs.trim()) l.push("*Observações:* " + cliente.obs.trim());
+    return l.join("\n");
+  }
+
+  function enviar() {
+    const foco = (sel, msg) => { toast(msg); const el = $(sel); if (el) el.focus(); };
+    if (!sacola.length) return toast("Sua sacola está vazia");
+    if (!cliente.nome.trim()) return foco("#f-nome", "Informe seu nome");
+    if (modo === "entrega" && bairros && !cliente.bairro) return foco("#f-bairro", "Selecione o bairro");
+    if (modo === "entrega" && !cliente.end.trim()) return foco("#f-end", "Informe o endereço de entrega");
+    if (D.pagamentos && !cliente.pag) { toast("Escolha a forma de pagamento"); const el = $("[data-pag]"); if (el) el.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+    salvar();
+    const msg = mensagemPedido();
+    if (D.demo) {
+      abrirPainel(`<h2>Pedido pronto ✅</h2>
+        <p class="desc">No cardápio real, este botão abre o WhatsApp da loja com a mensagem abaixo já escrita. É só o cliente tocar em enviar.</p>
+        <div class="previa-whats"><div class="balao">${esc(msg).replace(/\*([^*\n]+)\*/g, "<b>$1</b>").replace(/\n/g, "<br>")}</div></div>
+        <a class="btn-principal" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${ICONES.whatsapp} Testar no meu WhatsApp</a>
+        <button type="button" class="btn-secundario" data-acao="sacola">Voltar para a sacola</button>`, "demo", "Pedido pronto");
+      return;
+    }
+    window.open(linkWhats(msg), "_blank");
+    abrirPainel(`<div class="centro"><h2>Quase lá! 📲</h2>
+      <p class="desc">Abrimos o WhatsApp com o seu pedido. Confira e toque em <b>enviar</b> para confirmar.</p>
+      <a class="btn-principal" href="${linkWhats(msg)}" target="_blank" rel="noopener">${ICONES.whatsapp} Abrir o WhatsApp de novo</a>
+      <button type="button" class="btn-secundario" data-acao="limpar">Já enviei, esvaziar a sacola</button></div>`, "enviado", "Pedido enviado");
+  }
+
+  // ---------- compartilhar e QR ----------
+  function urlCardapio() { return D.url || location.href.split("#")[0]; }
+  async function compartilhar() {
+    const dados = { title: D.nome, text: `Confira o cardápio de ${D.nome}`, url: urlCardapio() };
+    if (navigator.share) { try { await navigator.share(dados); } catch (e) {} return; }
+    try { await navigator.clipboard.writeText(dados.url); toast("Link copiado!"); }
+    catch (e) { window.open("https://wa.me/?text=" + encodeURIComponent(dados.text + " " + dados.url), "_blank"); }
+  }
+  function abrirQR() {
+    abrirPainel(`<div class="centro"><h2>QR Code do cardápio</h2>
+      <p class="desc">Para as mesas, o balcão, os panfletos e as embalagens.</p>
+      <div class="qr-caixa" id="qr"></div>
+      <p class="link-copia">${esc(urlCardapio())}</p>
+      <button type="button" class="btn-principal tema" data-acao="baixar-qr">Baixar imagem do QR Code</button></div>`, "qr", "QR Code");
+    const alvo = $("#qr");
+    if (window.QRCode) new window.QRCode(alvo, { text: urlCardapio(), width: 200, height: 200, colorDark: "#111111", colorLight: "#ffffff", correctLevel: window.QRCode.CorrectLevel.M });
+    else alvo.innerHTML = '<p style="color:#111;font-size:13px">Sem internet para gerar o QR agora.</p>';
+  }
+  function baixarQR() {
+    const c = $("#qr canvas"), img = $("#qr img");
+    const a = document.createElement("a");
+    a.href = c ? c.toDataURL("image/png") : img && img.src;
+    a.download = "qrcode-" + semAcento(D.nome).replace(/[^a-z0-9]+/g, "-") + ".png";
+    a.click();
+  }
+
+  // ---------- busca e navegação ----------
+  function buscar(termo) {
+    const t = semAcento(termo.trim());
+    let algum = false;
+    $$("[data-categoria]", raiz).forEach((sec) => {
+      let visiveis = 0;
+      $$(".item", sec).forEach((it) => { const ok = !t || it.dataset.busca.includes(t); it.hidden = !ok; if (ok) visiveis++; });
+      sec.hidden = !visiveis; if (visiveis) algum = true;
+    });
+    const dest = $("#sec-destaques"); if (dest) dest.hidden = !!t;
+    $(".vazio", raiz).hidden = algum;
+  }
+
+  function observarSecoes() {
+    if (!("IntersectionObserver" in window)) return;
+    const obs = new IntersectionObserver((entradas) => {
+      entradas.forEach((en) => {
+        if (!en.isIntersecting) return;
+        $$(".chip", raiz).forEach((c) => c.classList.toggle("ativo", c.dataset.ir === en.target.id));
+        const ativo = $(`.chip[data-ir="${en.target.id}"]`, raiz);
+        if (ativo) ativo.parentElement.scrollTo({ left: ativo.offsetLeft - 16, behavior: "smooth" });
+      });
+    }, { rootMargin: "-130px 0px -60% 0px" });
+    $$(".secao", raiz).forEach((s) => obs.observe(s));
+  }
+
+  // ---------- eventos ----------
+  function eventos() {
+    raiz.addEventListener("click", (ev) => {
+      const el = ev.target.closest("[data-mais],[data-menos],[data-lmais],[data-lmenos],[data-rqtd],[data-acao],[data-ir],[data-modo],[data-pag],[data-abrir],.fundo-escuro");
+      if (!el) return;
+      if (el.classList.contains("fundo-escuro")) return fecharPainel();
+      if (el.dataset.mais) { ev.stopPropagation(); return alterarSimples(el.dataset.mais, 1); }
+      if (el.dataset.menos) { ev.stopPropagation(); return alterarSimples(el.dataset.menos, -1); }
+      if (el.dataset.lmais) return alterarLinha(+el.dataset.lmais, 1);
+      if (el.dataset.lmenos) return alterarLinha(+el.dataset.lmenos, -1);
+      if (el.dataset.rqtd) { rascunho.qtd = Math.max(1, Math.min(99, rascunho.qtd + +el.dataset.rqtd)); return atualizarRascunho(); }
+      if (el.dataset.ir) return document.getElementById(el.dataset.ir).scrollIntoView({ behavior: "smooth" });
+      if (el.dataset.modo) { modo = el.dataset.modo; salvar(); return abrirSacola(); }
+      if (el.dataset.pag != null) { cliente.pag = el.dataset.pag; salvar(); return abrirSacola(); }
+      if (el.dataset.abrir) { ev.stopPropagation(); return abrirProduto(el.dataset.abrir, $(".painel", raiz).dataset.tipo === "sacola"); }
+      switch (el.dataset.acao) {
+        case "sacola": return abrirSacola();
+        case "fechar": return fecharPainel();
+        case "enviar": return enviar();
+        case "compartilhar": return compartilhar();
+        case "qr": return abrirQR();
+        case "baixar-qr": return baixarQR();
+        case "confirmar-item": return confirmarItem();
+        case "limpar": sacola = []; cliente.obs = ""; cliente.troco = ""; atualizar(); return fecharPainel();
+        case "demo-contato": return toast(`No cardápio real, "${el.dataset.rotulo}" abre o contato da loja`);
+      }
+    });
+    raiz.addEventListener("keydown", (ev) => {
+      if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches("article[data-abrir]")) { ev.preventDefault(); abrirProduto(ev.target.dataset.abrir); }
+    });
+    raiz.addEventListener("input", (ev) => {
+      const t = ev.target;
+      if (t.dataset.campo) { cliente[t.dataset.campo] = t.value; if (t.dataset.campo !== "bairro") salvar(); }
+    });
+    raiz.addEventListener("change", (ev) => {
+      const t = ev.target;
+      if (t.dataset.campo === "bairro") { cliente.bairro = t.value; salvar(); return abrirSacola(); }
+      if (t.dataset.g != null && rascunho) {
+        const g = +t.dataset.g, o = +t.dataset.o, i = porId[rascunho.id], max = i.opcoes[g].max || 1;
+        if (max === 1) rascunho.sel[g] = t.checked ? [o] : [];
+        else if (t.checked) rascunho.sel[g].push(o);
+        else rascunho.sel[g] = rascunho.sel[g].filter((x) => x !== o);
+        t.closest(".grupo").classList.remove("pendente");
+        atualizarRascunho();
+      }
+    });
+    // foto que não carregar vira o emoji do produto
+    raiz.addEventListener("error", (ev) => {
+      const img = ev.target;
+      if (img.tagName !== "IMG") return;
+      if (img.classList.contains("capa-img")) img.outerHTML = `<div class="capa-arte"><span>${D.emoji || "🍽️"}</span><span>${D.emoji2 || ""}</span></div>`;
+      else if (img.parentElement.classList.contains("logo")) img.parentElement.textContent = iniciais(D.nome);
+      else img.outerHTML = `<div class="emoji"><span>${img.dataset.emoji || D.emoji || "🍽️"}</span></div>`;
+    }, true);
+    $(".busca input", raiz).addEventListener("input", (e) => buscar(e.target.value));
+    document.onkeydown = (e) => e.key === "Escape" && fecharPainel();
+  }
+
+  aplicarTema();
+  montar();
+  carregar();
+  eventos();
+  atualizar();
+  observarSecoes();
+  }
+
+  window.CardapioDigital = { iniciar };
+  iniciar();
+})();
+
+</script>
+</body>
+</html>

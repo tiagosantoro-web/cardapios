@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cardápio digital · exemplos</title>
+<meta name="description" content="Exemplos de cardápio digital com pedido pelo WhatsApp: hamburgueria, pizzaria, adega e doceria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/*CSS*/
+/* Barra da vitrine (só existe na demonstração) */
+.vitrine { position: relative; z-index: 30; background: #141216; color: #f3f0f6; padding-block: 14px 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); font-family: "Manrope", system-ui, sans-serif; }
+.vitrine-dentro { max-width: 560px; margin: 0 auto; }
+.vitrine-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+.vitrine-topo p { font-size: 12.5px; color: #b9b2c2; line-height: 1.35; }
+.vitrine-topo p b { color: #fff; font-size: 14px; display: block; }
+.vitrine-topo a { flex: none; font-size: 12.5px; font-weight: 800; color: #141216; background: #ffd166; padding: 8px 12px; border-radius: 10px; }
+.vitrine-botoes { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.vitrine-botoes::-webkit-scrollbar { display: none; }
+.vitrine-botoes button { flex: none; padding: 9px 14px; border-radius: 10px; background: #26232b; color: #e9e5ee; font-weight: 700; font-size: 14px; border: 1px solid #3a3641; }
+.vitrine-botoes button[aria-pressed="true"] { background: #fff; color: #141216; border-color: #fff; }
+.vitrine-botoes button:focus-visible { outline: 2px solid #ffd166; outline-offset: 2px; }
+.vitrine + .app .faixa-demo { display: none; }
+</style>
+</head>
+<body>
+<div class="vitrine"><div class="vitrine-dentro">
+  <div class="vitrine-topo">
+    <p><b>Cardápio digital com pedido no WhatsApp</b>Escolha um segmento, monte um pedido e veja a mensagem pronta.</p>
+    <a href="index.html">Quero o meu</a>
+  </div>
+  <div class="vitrine-botoes" role="group" aria-label="Escolha o segmento">
+    <!--BOTOES-->
+  </div>
+</div></div>
+<div class="app" id="app"></div>
+<script>
+var DEMOS = {};
+/*DADOS*/
+(function () {
+  var primeiro = document.querySelector("[data-demo]").dataset.demo;
+  var atual = (location.hash || "").slice(1);
+  if (!DEMOS[atual]) atual = primeiro;
+  window.CARDAPIO = DEMOS[atual];
+  function marcar() {
+    document.querySelectorAll("[data-demo]").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.dataset.demo === atual);
+      if (b.dataset.demo === atual) b.parentElement.scrollLeft = b.offsetLeft - 16;
+    });
+  }
+  marcar();
+  function trocar(k) {
+    if (!DEMOS[k] || k === atual) return;
+    atual = k; window.CARDAPIO = DEMOS[atual]; marcar();
+    try { history.replaceState(null, "", "#" + atual); } catch (err) {}
+    window.CardapioDigital.iniciar(); window.scrollTo(0, 0);
+  }
+  document.querySelector(".vitrine-botoes").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-demo]"); if (b) trocar(b.dataset.demo);
+  });
+  window.addEventListener("hashchange", function () { trocar(location.hash.slice(1)); });
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script>
+/*APP*/
+</script>
+</body>
+</html>
