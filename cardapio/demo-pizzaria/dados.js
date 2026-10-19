@@ -35,6 +35,7 @@
     },
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro", "Vale-refeição"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" },
     // Pedido na mesa: QR Code de cada mesa abre ?mesa=N
     salao: { ativo: true, mesas: 24, taxaServico: 10, wifi: { rede: "FornoNonna_Clientes", senha: "pizza2026" } },
     categorias: [

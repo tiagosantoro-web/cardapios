@@ -30,6 +30,7 @@
     entrega: { taxa: 7, pedidoMinimo: 30, gratisAcima: 90, tempo: "35-50 min", tempoRetirada: "20 min", retirada: true },
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro", "Vale-refeição"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" },
     dicaObs: "Ex.: sem cebola, sem picles, molho à parte",
     salao: { ativo: true, mesas: 16, taxaServico: 10, wifi: { rede: "BrasaBurger", senha: "smash2026" } },
     categorias: [

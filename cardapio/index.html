@@ -16,7 +16,8 @@
 <script>
   // ================== SEUS DADOS (edite só aqui) ==================
   const VENDEDOR = {
-    marca: "Cardápio Digital",          // seu nome ou o nome do seu serviço
+    marca: "Solodev Studio",            // seu nome ou o nome do seu serviço
+    site: "https://solodevstudio.com.br/", // site oficial (vazio = esconde)
     whatsapp: "5511977761747",          // 55 + DDD + número, só dígitos
     instagram: "",                      // ex.: "@seuperfil" (vazio = esconde)
     cidade: ""                          // ex.: "Itapevi e região" (vazio = esconde)
@@ -304,12 +305,14 @@
     <p>Me chame no WhatsApp, conte sobre o seu negócio e receba uma proposta sem compromisso.</p>
     <a class="btn btn-whats" data-whats="Olá! Quero um cardápio digital para o meu negócio." href="#contato" target="_blank" rel="noopener">Falar no WhatsApp</a>
     <p class="tel-final">ou ligue: <a data-tel href="#"></a></p>
+    <p class="tel-final" data-site-linha hidden>Conheça outros projetos em <a data-site href="#" target="_blank" rel="noopener"></a></p>
   </div>
 </div></section>
 </main>
 
 <footer class="faixa"><div class="dentro">
   <span><b data-marca>Cardápio Digital</b><span data-cidade></span></span>
+  <span data-site-linha hidden>Site oficial: <a data-site href="#" target="_blank" rel="noopener"></a></span>
   <span>WhatsApp e telefone: <a data-tel href="#"></a></span>
   <span data-insta-linha hidden>Instagram: <a data-insta href="#" target="_blank" rel="noopener"></a></span>
 </div></footer>
@@ -320,6 +323,11 @@
   // aplica os dados do VENDEDOR na página
   const numero = VENDEDOR.whatsapp.replace(/\D/g, "");
   document.querySelectorAll("[data-whats]").forEach((a) => { a.href = "https://wa.me/" + numero + "?text=" + encodeURIComponent(a.dataset.whats); });
+  if (VENDEDOR.site) {
+    const dominio = VENDEDOR.site.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    document.querySelectorAll("[data-site]").forEach((a) => { a.href = VENDEDOR.site; a.textContent = dominio; });
+    document.querySelectorAll("[data-site-linha]").forEach((el) => { el.hidden = false; });
+  }
   // telefone escrito: 5511977761747 -> (11) 97776-1747
   const local = numero.replace(/^55/, "");
   document.querySelectorAll("[data-tel]").forEach((a) => { a.href = "tel:+" + numero; a.textContent = "(" + local.slice(0, 2) + ") " + local.slice(2, -4) + "-" + local.slice(-4); });

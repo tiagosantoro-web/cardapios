@@ -16,6 +16,7 @@
     entrega: { taxa: 6, pedidoMinimo: 25, gratisAcima: 100, tempo: "30-50 min", tempoRetirada: "15 min", retirada: true },
     pagamentos: ["Pix", "Cartão", "Dinheiro"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" },
     dicaObs: "Ex.: sem granulado, embalar para presente",
     salao: { ativo: true, mesas: 10, wifi: { rede: "DoceAtelie", senha: "docinho2026" } },
     categorias: [

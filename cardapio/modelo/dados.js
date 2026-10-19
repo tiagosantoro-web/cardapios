@@ -62,7 +62,7 @@
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro"],  // "Dinheiro" pergunta o troco
     assinatura: "Cardápio digital",
     dicaObs: "Ex.: tirar algum ingrediente", // exemplo no campo de observação dos produtos
-    credito: { texto: "", link: "" }, // ex.: { texto: "Quer um cardápio assim? Fale comigo", link: "https://wa.me/55..." }
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" }, // link no rodapé ("" = esconde)
 
     // ---------------- PEDIDO NA MESA ("Estou no local") ----------------
     // Cria a aba "Estou no local": cardápio em estilo impresso, pedido para o garçom com o número da mesa,

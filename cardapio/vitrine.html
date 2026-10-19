@@ -451,7 +451,8 @@ body.modo-impressao { background: #ecebe8; }
 .vitrine-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
 .vitrine-topo p { font-size: 12.5px; color: #b9b2c2; line-height: 1.35; }
 .vitrine-topo p b { color: #fff; font-size: 14px; display: block; }
-.vitrine-topo a { flex: none; font-size: 12.5px; font-weight: 800; color: #141216; background: #ffd166; padding: 8px 12px; border-radius: 10px; }
+.vitrine-topo p a.vitrine-site { color: #ffd166; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.vitrine-topo > a { flex: none; font-size: 12.5px; font-weight: 800; color: #141216; background: #ffd166; padding: 8px 12px; border-radius: 10px; }
 .vitrine-botoes { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
 .vitrine-botoes::-webkit-scrollbar { display: none; }
 .vitrine-botoes button { flex: none; padding: 9px 14px; border-radius: 10px; background: #26232b; color: #e9e5ee; font-weight: 700; font-size: 14px; border: 1px solid #3a3641; }
@@ -463,7 +464,7 @@ body.modo-impressao { background: #ecebe8; }
 <body>
 <div class="vitrine"><div class="vitrine-dentro">
   <div class="vitrine-topo">
-    <p><b>Cardápio digital com pedido no WhatsApp</b>Escolha um segmento e teste as duas abas: <i>Delivery</i> e <i>Estou no local</i> (pedido na mesa).</p>
+    <p><b>Cardápio digital com pedido no WhatsApp</b>Escolha um segmento e teste as duas abas: <i>Delivery</i> e <i>Estou no local</i> (pedido na mesa). Por <a class="vitrine-site" href="https://solodevstudio.com.br/" target="_blank" rel="noopener">Solodev Studio</a>.</p>
     <a href="https://wa.me/5511977761747?text=Ol%C3%A1!%20Vi%20os%20exemplos%20e%20quero%20um%20card%C3%A1pio%20digital%20para%20o%20meu%20neg%C3%B3cio." target="_blank" rel="noopener">Quero o meu</a>
   </div>
   <div class="vitrine-botoes" role="group" aria-label="Escolha o segmento">
@@ -508,6 +509,7 @@ var DEMOS = {};
     entrega: { taxa: 7, pedidoMinimo: 30, gratisAcima: 90, tempo: "35-50 min", tempoRetirada: "20 min", retirada: true },
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro", "Vale-refeição"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" },
     dicaObs: "Ex.: sem cebola, sem picles, molho à parte",
     salao: { ativo: true, mesas: 16, taxaServico: 10, wifi: { rede: "BrasaBurger", senha: "smash2026" } },
     categorias: [
@@ -581,6 +583,7 @@ var DEMOS = {};
     },
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro", "Vale-refeição"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" },
     // Pedido na mesa: QR Code de cada mesa abre ?mesa=N
     salao: { ativo: true, mesas: 24, taxaServico: 10, wifi: { rede: "FornoNonna_Clientes", senha: "pizza2026" } },
     categorias: [
@@ -640,6 +643,7 @@ var DEMOS = {};
     entrega: { taxa: 6, pedidoMinimo: 35, gratisAcima: 150, tempo: "20-35 min", tempoRetirada: "10 min", retirada: true },
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro"],
     assinatura: "Beba com moderação · Se beber, não dirija · Exemplo ilustrativo",
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" },
     salao: { ativo: true, mesas: 12, taxaServico: 10, tituloDestaques: "Mais pedidos da noite", wifi: { rede: "NoiteGelada", senha: "gelada2026" } },
     categorias: [
       { nome: "Combos", itens: [
@@ -704,6 +708,7 @@ var DEMOS = {};
     entrega: { taxa: 6, pedidoMinimo: 25, gratisAcima: 100, tempo: "30-50 min", tempoRetirada: "15 min", retirada: true },
     pagamentos: ["Pix", "Cartão", "Dinheiro"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" },
     dicaObs: "Ex.: sem granulado, embalar para presente",
     salao: { ativo: true, mesas: 10, wifi: { rede: "DoceAtelie", senha: "docinho2026" } },
     categorias: [

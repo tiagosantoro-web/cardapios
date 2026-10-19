@@ -17,6 +17,7 @@
     entrega: { taxa: 6, pedidoMinimo: 35, gratisAcima: 150, tempo: "20-35 min", tempoRetirada: "10 min", retirada: true },
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro"],
     assinatura: "Beba com moderação · Se beber, não dirija · Exemplo ilustrativo",
+    credito: { texto: "Cardápio digital por Solodev Studio", link: "https://solodevstudio.com.br/" },
     salao: { ativo: true, mesas: 12, taxaServico: 10, tituloDestaques: "Mais pedidos da noite", wifi: { rede: "NoiteGelada", senha: "gelada2026" } },
     categorias: [
       { nome: "Combos", itens: [

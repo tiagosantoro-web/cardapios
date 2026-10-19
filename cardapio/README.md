@@ -1,5 +1,7 @@
 # Cardápio Digital: modelo-base
 
+Projeto da **[Solodev Studio](https://solodevstudio.com.br/)**. Todo cardápio leva no rodapé o crédito "Cardápio digital por Solodev Studio" com link para o site (campo `credito` do `dados.js`; deixe `texto: ""` para esconder).
+
 Um único modelo de cardápio que vira o cardápio de cada cliente trocando **um arquivo de dados** (`dados.js`). Sem servidor, sem banco de dados, sem mensalidade de ferramenta.
 
 - `vitrine.html`: os 4 exemplos num arquivo só, com uma barra para trocar de segmento. É o que você mostra no celular durante a visita. As fotos ficam nas pastas `demo-*/img`, então leve a pasta `cardapio` inteira (fontes e QR Code precisam de internet).
