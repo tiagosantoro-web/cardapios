@@ -31,6 +31,7 @@
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro", "Vale-refeição"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
     dicaObs: "Ex.: sem cebola, sem picles, molho à parte",
+    salao: { ativo: true, mesas: 16, taxaServico: 10, wifi: { rede: "BrasaBurger", senha: "smash2026" } },
     categorias: [
       { nome: "Combos", itens: [
         { nome: "Combo Brasa", desc: "Smash Duplo + batata média + refri lata. O pedido mais pedido da casa.", preco: 44.9, precoAntigo: 52.7, foto: "img/combo-brasa.webp", emoji: "🍔", tags: ["promo", "combo"], opcoes: [REFRI] },

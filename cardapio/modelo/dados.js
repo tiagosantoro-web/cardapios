@@ -64,6 +64,22 @@
     dicaObs: "Ex.: tirar algum ingrediente", // exemplo no campo de observação dos produtos
     credito: { texto: "", link: "" }, // ex.: { texto: "Quer um cardápio assim? Fale comigo", link: "https://wa.me/55..." }
 
+    // ---------------- PEDIDO NA MESA ("Estou no local") ----------------
+    // Cria a aba "Estou no local": cardápio em estilo impresso, pedido para o garçom com o número da mesa,
+    // "Chamar garçom" e "Minha conta" (taxa de serviço e divisão da conta).
+    // QR Code de cada mesa: abra o cardápio com ?imprimir=mesas no fim do link (ou pelo botão de QR Code no topo).
+    salao: {
+      ativo: false,                   // true liga a aba
+      mesas: 20,                      // quantos QR Codes de mesa gerar
+      envio: "ambos",                 // "whatsapp" = manda para o WhatsApp do salão; "mostrar" = cliente mostra a tela ao garçom; "ambos"
+      whatsapp: "",                   // número que recebe os pedidos das mesas (vazio = usa o whatsapp principal)
+      taxaServico: 10,                // % de serviço mostrado na conta (0 = não mostra)
+      wifi: { rede: "", senha: "" },  // aparece no topo com botão de copiar e nos QR Codes das mesas
+      somente: false                  // true = só atendimento no salão, sem a aba de delivery
+      // tituloDestaques: "Sugestões do chef",
+      // pagamentos: ["Pix", "Cartão", "Dinheiro"]  // vazio = usa os pagamentos do delivery
+    },
+
     // ---------------- PRODUTOS ----------------
     // Etiquetas: "mais-vendido", "promo", "destaque", "novo", "vegano", "vegetariano", "picante",
     //            "combo", "gelada", "sem-gluten", "serve-2", "serve-4", "encomenda"
@@ -74,6 +90,7 @@
     //   esgotado: true            → aparece apagado e não deixa pedir
     //   aPartirDe: true           → escreve "a partir de" antes do preço
     //   dicaObs: "Ex.: sem cebola" → texto de exemplo no campo de observação do produto
+    //   somenteDelivery: true / somenteSalao: true → produto (ou categoria inteira) só aparece numa das abas
     //   opcoes: [ ... ]           → tamanhos, sabores, adicionais (veja abaixo)
     // Grupo de opções: { titulo, min, max, itens: [{ nome, preco, desc, esgotado }] }
     //   min: 1, max: 1 → escolha obrigatória de uma (ex.: tamanho)

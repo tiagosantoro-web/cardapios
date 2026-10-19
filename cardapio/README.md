@@ -45,6 +45,24 @@ Custos reais para começar:
 11. Lembra a sacola, o nome e o endereço do cliente no celular dele (só nos cardápios reais, não nos exemplos).
 12. Botões de WhatsApp, Instagram, Como chegar e Ligar; **Compartilhar** e **QR Code** com download.
 13. Se uma foto não carregar, o produto mostra o emoji no lugar.
+14. **Pedido na mesa (aba "Estou no local")**: veja a seção 2.1.
+
+### 2.1 Pedido na mesa
+
+Liga com `salao: { ativo: true }` no `dados.js` (todos os exemplos já vêm ligados). O cardápio ganha a aba **Estou no local**:
+
+- Cardápio no estilo **impresso** (moldura, títulos ornamentados, linha pontilhada até o preço, tamanhos com preço embaixo do prato).
+- Cartão da mesa no topo, com **Chamar garçom** e **Minha conta**, e a senha do **Wi-Fi** com botão de copiar.
+- O pedido vai para o garçom de dois jeitos (campo `envio`):
+  - `"whatsapp"`: abre o WhatsApp do salão (`salao.whatsapp`, ou o número principal) com o número da mesa e os itens;
+  - `"mostrar"`: tela grande e limpa para o cliente mostrar ao garçom, que funciona sem internet;
+  - `"ambos"` (padrão): os dois botões.
+- **Minha conta**: pedidos feitos pelo celular, com horário, taxa de serviço opcional, **divisão da conta** e forma de pagamento. O botão **Pedir a conta** avisa o salão. A conta fica guardada no celular por 12 horas.
+- Produtos só para uma das abas: `somenteSalao: true` (ex.: couvert) ou `somenteDelivery: true` (ex.: combo com refrigerante 2 L).
+
+**QR Code de cada mesa:** abra o cardápio com `?imprimir=mesas` no fim do link (ex.: `.../pizzaria-do-joao/?imprimir=mesas`) ou toque no botão de QR Code no topo e em "QR Codes das mesas para imprimir". Sai uma folha A4 com 4 cartões por página (logo, número da mesa, QR Code e Wi-Fi). Cada QR abre `.../?mesa=12`, que já entra na aba do salão com a mesa preenchida. Preencha o `url` do `dados.js` antes de imprimir.
+
+Limite honesto: sem servidor, não existe painel de cozinha nem confirmação automática. O pedido chega no WhatsApp do salão (um celular no caixa resolve) ou é anotado pelo garçom a partir da tela.
 
 Para depois (só quando um cliente pedir ou pagar por isso):
 - Meia a meia com cálculo automático (hoje: campo de observação).

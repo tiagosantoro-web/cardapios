@@ -35,10 +35,12 @@
     },
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro", "Vale-refeição"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
+    // Pedido na mesa: QR Code de cada mesa abre ?mesa=N
+    salao: { ativo: true, mesas: 24, taxaServico: 10, wifi: { rede: "FornoNonna_Clientes", senha: "pizza2026" } },
     categorias: [
       { nome: "Promoções", itens: [
-        { nome: "Terça em Dobro", desc: "2 pizzas grandes tradicionais. Diga os sabores na observação.", preco: 119.9, precoAntigo: 144, foto: "img/terca-dobro.webp", emoji: "🍕", tags: ["promo"], dicaObs: "Ex.: 1 margherita e 1 calabresa" },
-        { nome: "Combo Família", desc: "1 pizza grande tradicional + 1 broto doce + refrigerante 2 L.", preco: 109.9, precoAntigo: 128, foto: "img/combo-familia.webp", emoji: "👨‍👩‍👧", tags: ["combo", "serve-4"], dicaObs: "Ex.: grande portuguesa, broto de chocolate, guaraná" }
+        { nome: "Terça em Dobro", desc: "2 pizzas grandes tradicionais. Diga os sabores na observação.", preco: 119.9, precoAntigo: 144, foto: "img/terca-dobro.webp", emoji: "🍕", tags: ["promo"], somenteDelivery: true, dicaObs: "Ex.: 1 margherita e 1 calabresa" },
+        { nome: "Combo Família", desc: "1 pizza grande tradicional + 1 broto doce + refrigerante 2 L.", preco: 109.9, precoAntigo: 128, foto: "img/combo-familia.webp", emoji: "👨‍👩‍👧", tags: ["combo", "serve-4"], somenteDelivery: true, dicaObs: "Ex.: grande portuguesa, broto de chocolate, guaraná" }
       ]},
       { nome: "Pizzas tradicionais", aviso: "Molho de tomate italiano e muçarela em todas. Meia a meia? Escreva na observação.", itens: [
         { nome: "Margherita", desc: "Muçarela de búfala, tomate, manjericão fresco e azeite extravirgem.", preco: 42, foto: "img/margherita.webp", emoji: "🍕", tags: ["mais-vendido"], opcoes: [TAMANHO(28), BORDA], dicaObs: OBS },
@@ -54,6 +56,7 @@
         { nome: "Horta da Nonna", desc: "Abobrinha, berinjela, pimentões assados, cebola roxa e muçarela.", preco: 48, foto: "img/vegetariana.webp", emoji: "🥗", tags: ["vegetariano"], opcoes: [TAMANHO(30)], dicaObs: OBS }
       ]},
       { nome: "Entradas", itens: [
+        { nome: "Couvert da casa", desc: "Pão de fermentação natural, azeite extravirgem e manteiga de ervas. Por pessoa.", preco: 14.9, emoji: "🥖", somenteSalao: true },
         { nome: "Bruschetta de tomate", desc: "4 fatias de pão de fermentação natural, tomate, manjericão e azeite.", preco: 28.9, foto: "img/bruschetta.webp", emoji: "🍅" }
       ]},
       { nome: "Sobremesas", sugerir: true, itens: [

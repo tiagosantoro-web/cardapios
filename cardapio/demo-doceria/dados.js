@@ -17,6 +17,7 @@
     pagamentos: ["Pix", "Cartão", "Dinheiro"],
     assinatura: "Cardápio digital · exemplo ilustrativo",
     dicaObs: "Ex.: sem granulado, embalar para presente",
+    salao: { ativo: true, mesas: 10, wifi: { rede: "DoceAtelie", senha: "docinho2026" } },
     categorias: [
       { nome: "Queridinhos", itens: [
         { nome: "Caixa de brigadeiros gourmet", desc: "Feitos com chocolate belga. Escolha a caixa e até 3 sabores.", preco: 27, foto: "img/brigadeiros.webp", emoji: "🍫", tags: ["mais-vendido"], opcoes: [

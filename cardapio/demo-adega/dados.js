@@ -17,6 +17,7 @@
     entrega: { taxa: 6, pedidoMinimo: 35, gratisAcima: 150, tempo: "20-35 min", tempoRetirada: "10 min", retirada: true },
     pagamentos: ["Pix", "Cartão na entrega", "Dinheiro"],
     assinatura: "Beba com moderação · Se beber, não dirija · Exemplo ilustrativo",
+    salao: { ativo: true, mesas: 12, taxaServico: 10, tituloDestaques: "Mais pedidos da noite", wifi: { rede: "NoiteGelada", senha: "gelada2026" } },
     categorias: [
       { nome: "Combos", itens: [
         { nome: "Balde Resenha", desc: "6 long necks no balde com gelo. Escolha a cerveja.", preco: 64.9, precoAntigo: 74, foto: "img/balde-resenha.webp", emoji: "🍻", tags: ["promo", "combo"], opcoes: [
